@@ -113,23 +113,25 @@ Esto genera una carpeta `dist/` para servir desde el backend o subir a un hostin
 
 ## 💡 Funcionalidad
 
-Un sistema de gestión de consultas médicas.
+Un sistema de **gestión de consultas médicas**.
 El sistema lo utiliza el personal de recepción y médicos.
 El sistema almacena los datos del paciente para ver el historial de turnos asignados a éste.
 
-El personal de recepción puede: 
-1-  ingresar a su cuenta y modificar sus datos personales;
-2-  ver en la pantalla principal los horarios de los médicos separados por categorías (clínico, cardiólogo, dermatólogo, ginecólogo, pediatra, traumatólogo, etc);
-3-  asignar un turno a un médico en un horario disponible;
-4-  observar el historial clínico de un paciente.
+El personal de recepción puede:
 
-El médico puede: 
-1-  ingresar a su cuenta y modificar sus datos personales;
-2-  visualizar los turnos que tiene asignados;
-3-  cambiar el estado del turno a “atendiendo”;
-4-  cambiar el estado del turno a “finalizado”.
+- ingresar a su cuenta y modificar sus datos personales;
+- ver en la pantalla principal los horarios de los médicos separados por categorías (clínico, cardiólogo, dermatólogo, ginecólogo, pediatra, traumatólogo, etc);
+- asignar un turno a un médico en un horario disponible;
+- observar el historial clínico de un paciente.
 
-Descripción del sistema:
+El médico puede:
+
+- ingresar a su cuenta y modificar sus datos personales;
+- visualizar los turnos que tiene asignados;
+- cambiar el estado del turno a “atendiendo”;
+- cambiar el estado del turno a “finalizado”.
+
+#### Descripción del sistema:
 
 El personal de recepción comunica a los pacientes los horarios disponibles de la especialidad médica solicitada. De haber un médico disponible, puede asignar un turno.
 
@@ -138,3 +140,5 @@ El paciente proporciona su documento, y de encontrarse previamente en la base de
 El turno creado tendrá los datos del médico, del recepcionista, y del paciente.
 
 El médico da por iniciada la sesión, y cumplida su tarea la da por finalizada. Puede agregar una observación al turno.
+
+---
