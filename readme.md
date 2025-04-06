@@ -110,3 +110,31 @@ Esto genera una carpeta `dist/` para servir desde el backend o subir a un hostin
 - Brian Herrera – _DBA_
 
 ---
+
+## 💡 Funcionalidad
+
+Un sistema de gestión de consultas médicas.
+El sistema lo utiliza el personal de recepción y médicos.
+El sistema almacena los datos del paciente para ver el historial de turnos asignados a éste.
+
+El personal de recepción puede: 
+1-  ingresar a su cuenta y modificar sus datos personales;
+2-  ver en la pantalla principal los horarios de los médicos separados por categorías (clínico, cardiólogo, dermatólogo, ginecólogo, pediatra, traumatólogo, etc);
+3-  asignar un turno a un médico en un horario disponible;
+4-  observar el historial clínico de un paciente.
+
+El médico puede: 
+1-  ingresar a su cuenta y modificar sus datos personales;
+2-  visualizar los turnos que tiene asignados;
+3-  cambiar el estado del turno a “atendiendo”;
+4-  cambiar el estado del turno a “finalizado”.
+
+Descripción del sistema:
+
+El personal de recepción comunica a los pacientes los horarios disponibles de la especialidad médica solicitada. De haber un médico disponible, puede asignar un turno.
+
+El paciente proporciona su documento, y de encontrarse previamente en la base de datos el sistema lo detecta y autocompleta los campos con sus datos. Pero, de no encontrarse en el sistema, se le solicitará toda la información, y al dar de alta el turno se guardarán los datos para su posterior uso.
+
+El turno creado tendrá los datos del médico, del recepcionista, y del paciente.
+
+El médico da por iniciada la sesión, y cumplida su tarea la da por finalizada. Puede agregar una observación al turno.
