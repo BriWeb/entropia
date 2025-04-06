@@ -30,7 +30,7 @@ entropia/
 ### 1. Clonar el proyecto
 
 ```bash
-git clone https://github.com/usuario/entropia.git
+git clone https://github.com/BriWeb/entropia.git
 cd entropia
 ```
 
@@ -46,7 +46,7 @@ npm install
 #### Frontend
 
 ```bash
-cd frontend
+cd ../frontend
 npm install
 ```
 
@@ -75,14 +75,14 @@ NODE_PORT=3000
 ### Backend
 
 ```bash
-cd backend
+cd ../backend
 npm run dev
 ```
 
 ### Frontend
 
 ```bash
-cd frontend
+cd ../frontend
 npm run dev
 ```
 
@@ -97,7 +97,7 @@ cd frontend
 npm run build
 ```
 
-Esto genera una carpeta `dist/` que podés servir desde el backend o subir a un hosting.
+Esto genera una carpeta `dist/` para servir desde el backend o subir a un hosting.
 
 ---
 
