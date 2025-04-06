@@ -103,7 +103,10 @@ Esto genera una carpeta `dist/` que podés servir desde el backend o subir a un 
 
 ## 👨‍💻 Autores
 
-- Brian Herrera – _Desarrollador Fullstack_
 - Equipo de compañeros – _Estudiantes en formación_
+- Luis Herrera – _Frontend_
+- Federico Estevez – _Backend_
+- Iara Baya – _Full Stack_
+- Brian Herrera – _DBA_
 
 ---
