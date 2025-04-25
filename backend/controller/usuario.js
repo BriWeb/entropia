@@ -13,6 +13,10 @@ export const LoginUsuarioController = async (req, res) => {
 
     resultado = resultado.recordset[0];
 
+    if (resultado.codigo_estado !== 0) {
+      return res.status(401).send({ mensaje: resultado.mensaje });
+    }
+
     return res.status(200).send(resultado);
   } catch (error) {
     console.error(error);

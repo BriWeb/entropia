@@ -183,9 +183,20 @@ BEGIN
 
 	IF @UserId IS NULL
 	BEGIN
-		RAISERROR('Usuario y/o contraseña incorrecta.', 16, 1);
+		SELECT 
+			NULL as id,
+			NULL as nombre,
+			NULL as apellido,
+			NULL as documento,
+			NULL as tipo,
+			NULL as especialidad,
+			NULL as obra_social,
+			NULL as legajo,
+			NULL as is_admin,
+			1 AS codigo_estado,
+			'Usuario y/o contraseña incorrecta.' as mensaje;
 		RETURN;
-	END
+	END;
 
 	if @TipoPersona is null
 	begin
