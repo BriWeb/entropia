@@ -1,4 +1,4 @@
-if not exists (select * from sys.databases where name = 'Prueba')
+select * from persona.usuarioif not exists (select * from sys.databases where name = 'Prueba')
 begin
 	create database prueba
 end;
@@ -165,12 +165,14 @@ BEGIN
 
 	DECLARE @TipoPersona NVARCHAR(50);
 	DECLARE @PersonaId INT;
+	DECLARE @TipoPersonaId INT;
 	DECLARE @UserId INT;
 	DECLARE @IsAdmin BIT;
 
 	SELECT 
 		@UserId = us.id, 
-		@PersonaId = us.persona_id, 
+		@PersonaId = pe.id, 
+		@TipoPersonaId = ti_pe.id, 
 		@TipoPersona = ti_pe.descripcion,
 		@IsAdmin = us.administrador
 	FROM persona.usuario as us
@@ -183,18 +185,33 @@ BEGIN
 
 	IF @UserId IS NULL
 	BEGIN
-		RAISERROR('Usuario y/o contraseña incorrecta.', 16, 1);
+		SELECT 
+			NULL as id,
+			NULL as nombre,
+			NULL as apellido,
+			NULL as documento,
+			NULL as usuario,
+			NULL as tipo,
+			NULL as tipo_persona_id,
+			NULL as especialidad,
+			NULL as obra_social,
+			NULL as legajo,
+			NULL as is_admin,
+			1 AS codigo_estado,
+			'Usuario y/o contraseña incorrecta.' as mensaje;
 		RETURN;
-	END
+	END;
 
 	if @TipoPersona is null
 	begin
 		SELECT 
-			pe.id,
+			@PersonaId as id,
 			pe.nombre,
 			pe.apellido,
 			pe.documento,
+			@Usuario as usuario,
 			null as tipo,
+			null as tipo_persona_id,
 			null as especialidad,
 			null as obra_social,
 			null as legajo,
@@ -209,11 +226,13 @@ BEGIN
 	if @TipoPersona = 'Medico'
 	begin
 		SELECT 
-			pe.id,
+			@PersonaId as id,
 			pe.nombre,
 			pe.apellido,
 			pe.documento,
+			@Usuario as usuario,
 			'Medico' as Tipo,
+			@TipoPersonaId as tipo_persona_id,
 			me.especialidad_id,
 			null as obra_social,
 			null as legajo,
@@ -230,11 +249,13 @@ BEGIN
 	if @TipoPersona = 'Paciente'
 	begin
 		SELECT 
-			pe.id,
+			@PersonaId as id,
 			pe.nombre, 
 			pe.apellido,
 			pe.documento,
+			@Usuario as usuario,
 			'Paciente' as Tipo,
+			@TipoPersonaId as tipo_persona_id,
 			null as especialidad,
 			pa.obra_social,
 			null as legajo,
@@ -251,11 +272,12 @@ BEGIN
 	if @TipoPersona = 'Recepcion'
 	begin
 		SELECT 
-			pe.id,
+			@PersonaId as id,
 			pe.nombre, 
 			pe.apellido,
 			pe.documento,
 			'Recepcion' as Tipo,
+			@TipoPersonaId as tipo_persona_id,
 			null as especialidad,
 			null as obra_social,
 			re.legajo,
@@ -315,7 +337,7 @@ CREATE or alter PROCEDURE Admin_AddMedico --✔️
 	@Apellido NVARCHAR(25),
 	@Documento NVARCHAR(25),
 	@Especialidad_id int,
-	@Id INT OUTPUT
+	@medico_id INT OUTPUT
 AS
 begin
 	declare @TipoMedicoId int;
@@ -342,7 +364,7 @@ begin
 	OUTPUT inserted.id into @NewMedico(id)
 	values (@Especialidad_id, @PersonaId);
 
-	SELECT @Id = id FROM @NewMedico;
+	SELECT @medico_id = id FROM @NewMedico;
 end;
 go;
 
@@ -492,6 +514,48 @@ end;
 go;
 
 
+create or alter procedure SearchPacienteByDocumento 
+@Documento varchar(50)
+as
+begin
+    SET NOCOUNT ON;
+
+	IF EXISTS (
+	  SELECT 1
+	  FROM persona.paciente AS pa
+	  JOIN persona.persona AS pe ON pe.id = pa.persona_id
+	  WHERE pe.documento = @Documento
+	)
+	begin
+		select 
+			pe.id as persona_id, 
+			pa.id as paciente_id, 
+			pe.nombre, pe.apellido, 
+			pe.documento, 
+			pa.obra_social,
+			'Paciente encontrado' AS mensaje,
+			0 AS codigo_estado
+		from persona.paciente as pa
+		join persona.persona as pe
+		on pe.id = pa.persona_id
+		where pe.documento = @Documento;
+	end
+	else
+	begin
+		SELECT 
+			NULL AS persona_id,
+			NULL AS paciente_id,
+			NULL AS nombre,
+			NULL AS apellido,
+			NULL AS documento,
+			NULL AS obra_social,
+			'No existe un paciente con ese documento' AS mensaje,
+			1 AS codigo_estado;
+	end;
+end;
+
+--EXEC SearchPacienteByDocumento '42.678.351';
+
 --INSERTANDO DATOS PARA PROBAR
 --insert into persona.tipo_persona (descripcion) values ('Paciente'), ('Medico'), ('Recepcion');
 --select * from persona.tipo_persona;
@@ -547,7 +611,6 @@ go;
 --select * from persona.persona;
 --select * from persona.paciente;
 
-
 --STORE PARA AGREGAR MÉDICOS
 --DECLARE @MedicoId INT;
 --EXEC Admin_AddMedico 'Esteban', 'Prado', '45.802.930', 1, @MedicoId OUTPUT;
@@ -558,6 +621,7 @@ go;
 --EXEC Admin_AddMedico 'Maria', 'Prado', '54.337.933', 7, @MedicoId OUTPUT;
 --EXEC Admin_AddMedico 'Sofia', 'Santos', '34.282.390', 8, @MedicoId OUTPUT;
 --SELECT @MedicoId AS Id;
+
 
 --select * from persona.persona;
 --select * from persona.medico;
