@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { config } from "dotenv";
 import usuarioRoutes from "./routes/usuario.js";
+import pacienteRoutes from "./routes/paciente.js";
 import pruebasRoutes from "./routes/pruebas.js";
 
 config();
@@ -16,6 +17,8 @@ app.use(express.json());
 
 // Rutas
 app.use(usuarioRoutes);
+app.use(pacienteRoutes);
+
 app.use(pruebasRoutes);
 
 // Servidor
