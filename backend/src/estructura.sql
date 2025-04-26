@@ -1,4 +1,4 @@
-select * from persona.usuarioif not exists (select * from sys.databases where name = 'Prueba')
+if not exists (select * from sys.databases where name = 'Prueba')
 begin
 	create database prueba
 end;
@@ -155,65 +155,78 @@ end;
 go;
 
 
+--drop function ValidarUsuario;
+CREATE or alter FUNCTION persona.ValidarUsuario ( --✔️
+    @Usuario NVARCHAR(50),
+    @Contrasenia NVARCHAR(50)
+)
+RETURNS int
+AS
+BEGIN
+    DECLARE @UsuarioId INT;
+
+	SELECT @UsuarioId = id 
+	FROM persona.usuario
+	WHERE usuario = @Usuario AND contrasenia = @Contrasenia;
+
+    IF @UsuarioId IS NULL
+		SET @UsuarioId = 0;
+
+	RETURN @UsuarioId;
+END
+GO
+--SELECT persona.ValidarUsuario('brherrera', '1234');
+
+
 --drop procedure GetUserData;
 CREATE or alter PROCEDURE GetUserData --✔️
 	@Usuario NVARCHAR(50),
-	@Contrasenia NVARCHAR(50)
+    @Contrasenia NVARCHAR(50)
 AS
 BEGIN
 	SET NOCOUNT ON;
 
-	DECLARE @TipoPersona NVARCHAR(50);
 	DECLARE @PersonaId INT;
+	DECLARE @TipoPersonaDescripcion NVARCHAR(50);
 	DECLARE @TipoPersonaId INT;
-	DECLARE @UserId INT;
 	DECLARE @IsAdmin BIT;
 
+	DECLARE @UsuarioId int;
+	SELECT @UsuarioId = persona.ValidarUsuario(@Usuario, @Contrasenia);
+
+	IF @UsuarioId = 0
+	BEGIN
+		SELECT 
+			1 AS codigo_estado,
+			'Usuario y/o contraseña incorrecta.' as mensaje;
+		RETURN;
+	END;
+
 	SELECT 
-		@UserId = us.id, 
-		@PersonaId = pe.id, 
+		@PersonaId = us.persona_id,
 		@TipoPersonaId = ti_pe.id, 
-		@TipoPersona = ti_pe.descripcion,
+		@TipoPersonaDescripcion = ti_pe.descripcion,
 		@IsAdmin = us.administrador
 	FROM persona.usuario as us
 	JOIN persona.persona as pe 
 	ON us.persona_id = pe.id
 	left join persona.tipo_persona as ti_pe
 	on pe.tipo_persona_id = ti_pe.id
-	WHERE us.usuario = @Usuario AND us.contrasenia = @Contrasenia;
+	WHERE us.id = @UsuarioId;
 	
 
-	IF @UserId IS NULL
-	BEGIN
-		SELECT 
-			NULL as id,
-			NULL as nombre,
-			NULL as apellido,
-			NULL as documento,
-			NULL as usuario,
-			NULL as tipo,
-			NULL as tipo_persona_id,
-			NULL as especialidad,
-			NULL as obra_social,
-			NULL as legajo,
-			NULL as is_admin,
-			1 AS codigo_estado,
-			'Usuario y/o contraseña incorrecta.' as mensaje;
-		RETURN;
-	END;
-
-	if @TipoPersona is null
+	if @TipoPersonaId is null
 	begin
 		SELECT 
-			@PersonaId as id,
+			@PersonaId as persona_id,
+			@UsuarioId as usuario_id,
 			pe.nombre,
 			pe.apellido,
 			pe.documento,
 			@Usuario as usuario,
-			null as tipo,
+			null as tipo_persona_descripcion,
 			null as tipo_persona_id,
-			null as especialidad,
-			null as obra_social,
+			null as especialidad_id,
 			null as legajo,
 			@IsAdmin as is_admin,
 			0 AS codigo_estado,
@@ -223,18 +236,18 @@ BEGIN
 		return;
 	end;
 
-	if @TipoPersona = 'Medico'
+	if @TipoPersonaId = 2 --'Medico'
 	begin
 		SELECT 
-			@PersonaId as id,
+			@PersonaId as persona_id,
+			@UsuarioId as usuario_id,
 			pe.nombre,
 			pe.apellido,
 			pe.documento,
 			@Usuario as usuario,
-			'Medico' as Tipo,
+			@TipoPersonaDescripcion as tipo_persona_descripcion,
 			@TipoPersonaId as tipo_persona_id,
 			me.especialidad_id,
-			null as obra_social,
 			null as legajo,
 			@IsAdmin as is_admin,
 			0 AS codigo_estado,
@@ -246,40 +259,17 @@ BEGIN
 		return;
 	end;
 
-	if @TipoPersona = 'Paciente'
+	if @TipoPersonaId = 3 --'Recepcion'
 	begin
 		SELECT 
-			@PersonaId as id,
+			@PersonaId as persona_id,
+			@UsuarioId as usuario_id,
 			pe.nombre, 
 			pe.apellido,
 			pe.documento,
-			@Usuario as usuario,
-			'Paciente' as Tipo,
+			@TipoPersonaDescripcion as tipo_persona_descripcion,
 			@TipoPersonaId as tipo_persona_id,
-			null as especialidad,
-			pa.obra_social,
-			null as legajo,
-			@IsAdmin as is_admin,
-			0 AS codigo_estado,
-			'OK' as mensaje
-		FROM persona.persona as pe
-		JOIN persona.paciente as pa
-		ON pa.persona_id = pe.id
-		WHERE pe.id = @PersonaId;
-		return;
-	end;
-
-	if @TipoPersona = 'Recepcion'
-	begin
-		SELECT 
-			@PersonaId as id,
-			pe.nombre, 
-			pe.apellido,
-			pe.documento,
-			'Recepcion' as Tipo,
-			@TipoPersonaId as tipo_persona_id,
-			null as especialidad,
-			null as obra_social,
+			null as especialidad_id,
 			re.legajo,
 			@IsAdmin as is_admin,
 			0 AS codigo_estado,
@@ -292,6 +282,161 @@ BEGIN
 	END;
 END;
 go;
+
+
+--drop procedure GetPersonData;
+CREATE or alter PROCEDURE GetPersonData --✔️
+	@PersonaId int
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @TipoPersonaDescripcion NVARCHAR(50);
+	DECLARE @TipoPersonaId INT;
+
+	if not exists(
+		select 1 
+		from persona.persona
+		where id = @PersonaId
+	)	
+	BEGIN
+		SELECT 
+			1 AS codigo_estado,
+			'No existe una persona con ese id.' as mensaje;
+		RETURN;
+	END;
+
+
+	SELECT 
+		@TipoPersonaId = ti_pe.id, 
+		@TipoPersonaDescripcion = ti_pe.descripcion
+	FROM persona.persona as pe
+	left join persona.tipo_persona as ti_pe
+	on pe.tipo_persona_id = ti_pe.id
+	WHERE pe.id = @PersonaId;
+
+
+	if @TipoPersonaId is null
+	begin
+		SELECT 
+			@PersonaId as persona_id,
+			pe.nombre,
+			pe.apellido,
+			pe.documento,
+			null as tipo_persona_descripcion,
+			null as tipo_persona_id,
+			null as obra_social,
+			null as especialidad_id,
+			null as legajo,
+			0 AS codigo_estado,
+			'OK' as mensaje
+		FROM persona.persona pe
+		WHERE pe.id = @PersonaId;
+		return;
+	end;
+
+	if @TipoPersonaId = 1 --'Paciente'
+	begin
+		SELECT 
+			@PersonaId as persona_id,
+			pe.nombre,
+			pe.apellido,
+			pe.documento,
+			@TipoPersonaDescripcion as tipo_persona_descripcion,
+			@TipoPersonaId as tipo_persona_id,
+			pa.obra_social,
+			null as especialidad_id,
+			null as legajo,
+			0 AS codigo_estado,
+			'OK' as mensaje
+		FROM persona.persona pe
+		JOIN persona.paciente as pa
+		ON pa.persona_id = pe.id
+		WHERE pe.id = @PersonaId;
+		return;
+	end;
+
+	if @TipoPersonaId = 2 --'Medico'
+	begin
+		SELECT 
+			@PersonaId as persona_id,
+			pe.nombre,
+			pe.apellido,
+			pe.documento,
+			@TipoPersonaDescripcion as tipo_persona_descripcion,
+			@TipoPersonaId as tipo_persona_id,
+			null as obra_social,
+			me.especialidad_id,
+			null as legajo,
+			0 AS codigo_estado,
+			'OK' as mensaje
+		FROM persona.persona pe
+		JOIN persona.medico as me
+		ON me.persona_id = pe.id
+		WHERE pe.id = @PersonaId;
+		return;
+	end;
+
+	if @TipoPersonaId = 3 --'Recepcion'
+	begin
+		SELECT 
+			@PersonaId as persona_id,
+			pe.nombre, 
+			pe.apellido,
+			pe.documento,
+			@TipoPersonaDescripcion as tipo_persona_descripcion,
+			@TipoPersonaId as tipo_persona_id,
+			null as obra_social,
+			null as especialidad_id,
+			re.legajo,
+			0 AS codigo_estado,
+			'OK' as mensaje
+		FROM persona.persona as pe
+		JOIN persona.recepcion as re
+		ON re.persona_id = pe.id
+		WHERE pe.id = @PersonaId;
+		return;
+	END;
+END;
+go;
+
+
+--drop procedure SearchPacienteByDocumento
+create or alter procedure SearchPacienteByDocumento 
+@Documento varchar(50)
+as
+begin
+    SET NOCOUNT ON;
+
+	IF EXISTS (
+	  SELECT 1
+	  FROM persona.paciente AS pa
+	  JOIN persona.persona AS pe ON pe.id = pa.persona_id
+	  WHERE pe.documento = @Documento
+	)
+	begin
+		select 
+			pe.id as persona_id, 
+			pa.id as paciente_id, 
+			pe.nombre, pe.apellido, 
+			pe.documento, 
+			pa.obra_social,
+			'Paciente encontrado' AS mensaje,
+			0 AS codigo_estado
+		from persona.paciente as pa
+		join persona.persona as pe
+		on pe.id = pa.persona_id
+		where pe.documento = @Documento;
+	end
+	else
+	begin
+		SELECT 
+			'No existe un paciente con ese documento' AS mensaje,
+			1 AS codigo_estado;
+	end;
+end;
+go;
+
 
 --drop procedure AddPaciente;
 CREATE or alter PROCEDURE AddPaciente --✔️
@@ -331,6 +476,7 @@ begin
 end;
 go;
 
+
 --drop procedure Admin_AddMedico
 CREATE or alter PROCEDURE Admin_AddMedico --✔️
 	@Nombre NVARCHAR(25),
@@ -367,6 +513,7 @@ begin
 	SELECT @medico_id = id FROM @NewMedico;
 end;
 go;
+
 
 --drop procedure Admin_AddRecepcion
 CREATE or alter PROCEDURE Admin_AddRecepcion --✔️
@@ -405,6 +552,7 @@ begin
 end;
 go;
 
+
 --drop procedure AddTurno
 create or alter procedure AddTurno --✔️
 	@Horario_id int,
@@ -425,9 +573,11 @@ begin
 end;
 go;
 
+
 --drop view GetTurnos
 create or alter view GetTurnos as --✔️
 select 
+	tu.id,
 	es.descripcion as "estado_turno",
 	es.id as "estado_turno_id",
 	tu.horario_id,
@@ -464,6 +614,7 @@ on tu.recepcion_id = rec.id
 join persona.persona as per_3
 on rec.persona_id = per_3.id;
 go;
+
 
 --drop procedure AvailableTurnos
 create or alter procedure AvailableTurnos
@@ -514,47 +665,7 @@ end;
 go;
 
 
-create or alter procedure SearchPacienteByDocumento 
-@Documento varchar(50)
-as
-begin
-    SET NOCOUNT ON;
-
-	IF EXISTS (
-	  SELECT 1
-	  FROM persona.paciente AS pa
-	  JOIN persona.persona AS pe ON pe.id = pa.persona_id
-	  WHERE pe.documento = @Documento
-	)
-	begin
-		select 
-			pe.id as persona_id, 
-			pa.id as paciente_id, 
-			pe.nombre, pe.apellido, 
-			pe.documento, 
-			pa.obra_social,
-			'Paciente encontrado' AS mensaje,
-			0 AS codigo_estado
-		from persona.paciente as pa
-		join persona.persona as pe
-		on pe.id = pa.persona_id
-		where pe.documento = @Documento;
-	end
-	else
-	begin
-		SELECT 
-			NULL AS persona_id,
-			NULL AS paciente_id,
-			NULL AS nombre,
-			NULL AS apellido,
-			NULL AS documento,
-			NULL AS obra_social,
-			'No existe un paciente con ese documento' AS mensaje,
-			1 AS codigo_estado;
-	end;
-end;
-
---EXEC SearchPacienteByDocumento '42.678.351';
+--EXEC SearchPacienteByDocumento '42.678.35';
 
 --INSERTANDO DATOS PARA PROBAR
 --insert into persona.tipo_persona (descripcion) values ('Paciente'), ('Medico'), ('Recepcion');
@@ -582,7 +693,6 @@ end;
 --EXEC GetUserData 'brherrera', '1234';
 
 
-
 --STORE PARA AGREGAR PACIENTES
 --DECLARE @PacienteId INT;
 --EXEC AddPaciente 'Pedrito', 'Lopez', '25.444.987', 0, @PacienteId OUTPUT;
@@ -608,8 +718,10 @@ end;
 --EXEC AddPaciente 'Isabel', 'Castro', '45.222.432', 1, @PacienteId OUTPUT;
 --SELECT @PacienteId AS Id;
 
+
 --select * from persona.persona;
 --select * from persona.paciente;
+
 
 --STORE PARA AGREGAR MÉDICOS
 --DECLARE @MedicoId INT;
@@ -633,6 +745,7 @@ end;
 --EXEC Admin_AddRecepcion 'Ana', 'Diaz', '25.071.263', '2232', @RecepcionId OUTPUT;
 --EXEC Admin_AddRecepcion 'Carlos', 'Morales', '37.453.168', '2233', @RecepcionId OUTPUT;
 --SELECT @RecepcionId AS Id;
+
 
 --select * from persona.persona;
 --select * from persona.recepcion;
@@ -677,11 +790,10 @@ end;
 --(10, '2025-04-19', 2, 2, 2), (11, '2025-04-19', 3, 3, 3);
 
 
-
 --VISTA PARA VER TODOS LOS TURNOS
-select * from GetTurnos
-where estado_turno_id != 3 and especialista_en_id = 2;
+--select * from GetTurnos
+--where estado_turno_id != 3 and especialista_en_id = 2;
 
 
 --VISTA PARA VER TODOS LOS TURNOS DISPONIBLES DE UNA ESPECIALIDAD
-EXEC AvailableTurnos 2, '09/04/2025'; --2025-04-08 09:30:00
+--EXEC AvailableTurnos 2, '09/04/2025'; --2025-04-08 09:30:00
