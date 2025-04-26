@@ -17,6 +17,10 @@
     "mssql": "^11.0.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "@types/express": "^5.0.1",
+    "@types/mssql": "^9.1.7",
+    "@types/node": "^22.15.2",
+    "nodemon": "^3.1.9",
+    "typescript": "^5.8.3"
   }
 }
