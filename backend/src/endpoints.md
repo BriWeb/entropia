@@ -1,13 +1,11 @@
-# Endpoints
+# <div style="text-align: center">Endpoints de Usuario</div>
 
-## Usuario
-
-### _Login_
+### <span style="color: #bdbd4a"> Login </span>
 
 **POST** `/usuarios/login`
 
-- **Descripción:** Valida que la cuenta y contraseña ingresada existan
-- **Parámetros:** Recibe un json con el usuario y la contraseña a través del body
+- **Descripción:** Valida que _usuario_ y _contraseña_ ingresados pertenezcan a una cuenta
+- **Parámetros:** Recibe un json con el _usuario_ y la _contraseña_ a través del body
 
 ```json
 {
@@ -16,7 +14,7 @@
 }
 ```
 
-#### **Caso de éxito**
+#### <span style="color: #1b671b">**Caso de éxito**</span>
 
 - **Código:** `200 OK`
 - **Respuesta:** Devuelve un json con los datos del usuario que se loguea
@@ -28,7 +26,9 @@
   "nombre": "Jon",
   "apellido": "Doe",
   "documento": "39457731",
+  "usuario": "micuenta",
   "tipo": null,
+  "tipo_persona_id": null,
   "especialidad": null,
   "obra_social": null,
   "legajo": null,
@@ -38,7 +38,7 @@
 }
 ```
 
-#### **Caso de error**
+#### <span style="color: #c52828">**Caso de error**</span>
 
 - **Código:** `401 Unauthorized`
 - **Respuesta:** Devuelve un json con un mensaje de error
@@ -51,25 +51,25 @@
 
 ---
 
-### _Buscar paciente_
+### <span style="color: #bdbd4a">Buscar paciente</span>
 
-**GET** `/paciente/:documento`
+**GET** `/paciente?documento=` + documento
 
-- **Descripcion:** Busca un paciente filtrando por documento
-- **Parámetros:** Recibe el documento del paciente a través de la url
+- **Descripcion:** Busca un paciente filtrando por _documento_
+- **Parámetros:** Recibe el _documento_ del paciente a través de query params
 
 ```json
-/paciente/29339701
+/paciente?documento=29339701
 ```
 
-#### Caso de éxito
+#### <span style="color: #1b671b">**Caso de éxito**</span>
 
 - **Código:** 200 OK
 - **Respuesta:** Devuelve un json con los datos del paciente encontrado
 
 ```json
 {
-  "id": 2,
+  "paciente_id": 2,
   "nombre": "Paciente",
   "apellido": "Cualquiera",
   "documento": "29339701",
@@ -77,20 +77,20 @@
 }
 ```
 
-#### Caso de error
+#### <span style="color: #c52828">**Caso de error**</span>
 
 - **Código:** 200 OK
 - **Respuesta:** Devuelve un json con un mensaje de error
 
 ```json
 {
-  "mensaje": "No existe el paciente en la base de datos"
+  "mensaje": "No existe un paciente con ese documento"
 }
 ```
 
 ---
 
-### _Agregar paciente_
+### <span style="color: #bdbd4a">Agregar paciente</span>
 
 **POST** `/recepcion/agregar_paciente/`
 
@@ -106,7 +106,7 @@
 }
 ```
 
-#### Caso de éxito
+#### <span style="color: #1b671b">**Caso de éxito**</span>
 
 - **Código:** 201 Created
 - **Respuesta:** Devuelve un json con el id del paciente
@@ -119,7 +119,7 @@
 
 ---
 
-### _Agregar médico_
+### <span style="color: #bdbd4a">Agregar médico</span>
 
 **POST** `/recepcion/agregar_medico/`
 
@@ -135,20 +135,20 @@
 }
 ```
 
-#### Caso de éxito
+#### <span style="color: #1b671b">**Caso de éxito**</span>
 
 - **Código:** 201 Created
-- **Respuesta:** Devuelve un json con el id del médico creado
+- **Respuesta:** Devuelve un json con el id del médico
 
 ```json
 {
-  "id": 1
+  "medico_id": 1
 }
 ```
 
 ---
 
-### \_\_
+### <span style="color: #bdbd4a">Agregar recepcionista</span>
 
 \*\* \*\* ``
 
@@ -159,7 +159,7 @@
 {}
 ```
 
-#### Caso de éxito
+#### <span style="color: #1b671b">**Caso de éxito**</span>
 
 - **Código:**
 - **Respuesta:**
@@ -168,7 +168,7 @@
 {}
 ```
 
-#### Caso de error
+#### <span style="color: #c52828">**Caso de error**</span>
 
 - **Código:**
 - **Respuesta:**
