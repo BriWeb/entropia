@@ -10,8 +10,11 @@ Desarrollado por equipo "**entropia**", para la materia **Desarrollo de Sistemas
 ```
 entropia/
 ├── backend/     # Servidor Node.js con Express
-│   ├── routes/
+│   ├── auth/
 │   ├── controllers/
+│   ├── database/
+│   ├── routes/
+│   ├── src/
 │   ├── index.js
 │   └── .env
 ├── frontend/    # Cliente en React
@@ -66,6 +69,7 @@ DB_PASSWORD_LOCAL=
 DB_PASSWORD_NUBE=
 NODE_SERVER=localhost
 NODE_PORT=3000
+JWT_SECRET_KEY=ENTROPIA
 ```
 
 ---
