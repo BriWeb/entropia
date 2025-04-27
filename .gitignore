@@ -4,6 +4,7 @@
 /backend/controller/**/*.ts
 /backend/database/**/*.ts
 /backend/routes/**/*.ts
+/backend/pruebas
 
 # Frontend
 /frontend/node_modules/

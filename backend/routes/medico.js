@@ -3,6 +3,6 @@ import { AddMedicoController } from "../controller/medico.js";
 
 const router = Router();
 
-router.post("/admin/agregar_medico", AddMedicoController);
+router.post("/medico/add", AddMedicoController);
 
 export default router;

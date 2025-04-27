@@ -15,7 +15,7 @@ export const AddPacienteController = async (req, res) => {
             .output("PacienteId", sql.Int)
             .execute("AddPaciente");
         console.log(resultado);
-        return res.status(200).send(resultado.output.PacienteId);
+        return res.status(201).send(resultado.output.PacienteId);
     }
     catch (error) {
         console.error(error);

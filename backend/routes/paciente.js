@@ -3,7 +3,7 @@ import { AddPacienteController, SearchPacienteByDocumentController } from "../co
 
 const router = Router();
 
-router.post("/recepcion/agregar_paciente", AddPacienteController);
-router.get("/recepcion/buscar_paciente", SearchPacienteByDocumentController);
+router.post("/paciente/add", AddPacienteController);
+router.get("/paciente", SearchPacienteByDocumentController);
 
 export default router;

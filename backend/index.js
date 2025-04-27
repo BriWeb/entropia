@@ -1,12 +1,13 @@
 import express from "express";
 import cors from "cors";
 import { config } from "dotenv";
+import fs from "fs";
 import usuarioRoutes from "./routes/usuario.js";
 import pacienteRoutes from "./routes/paciente.js";
 import medicoRoutes from "./routes/medico.js";
-import pruebasRoutes from "./routes/pruebas.js";
 import personaRoutes from "./routes/persona.js";
 import turnoRoutes from "./routes/turno.js";
+import recepcionistaRoutes from "./routes/recepcionista.js";
 
 config();
 const app = express();
@@ -25,8 +26,14 @@ app.use(pacienteRoutes);
 app.use(medicoRoutes);
 app.use(personaRoutes);
 app.use(turnoRoutes);
+app.use(recepcionistaRoutes);
 
-app.use(pruebasRoutes);
+// Cargando pruebas si existen
+if (fs.existsSync("./pruebas")) {
+  try {
+    const pruebasRoutes = await import("./pruebas/routes/pruebas.js");
+    app.use(pruebasRoutes.default);
+  } catch (error) { console.error("Error al cargar las rutas de pruebas:", error);} }
 
 // Middleware para manejar errores 404
 app.use((req, res, next) => {
