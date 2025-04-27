@@ -1,6 +1,9 @@
 # Backend
 /backend/node_modules/
 /backend/.env
+/backend/controller/**/*.ts
+/backend/database/**/*.ts
+/backend/routes/**/*.ts
 
 # Frontend
 /frontend/node_modules/

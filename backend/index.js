@@ -3,6 +3,7 @@ import cors from "cors";
 import { config } from "dotenv";
 import usuarioRoutes from "./routes/usuario.js";
 import pacienteRoutes from "./routes/paciente.js";
+import medicoRoutes from "./routes/medico.js";
 import pruebasRoutes from "./routes/pruebas.js";
 import personaRoutes from "./routes/persona.js";
 import turnoRoutes from "./routes/turno.js";
@@ -21,6 +22,7 @@ app.use(express.json());
 // Rutas
 app.use(usuarioRoutes);
 app.use(pacienteRoutes);
+app.use(medicoRoutes);
 app.use(personaRoutes);
 app.use(turnoRoutes);
 
