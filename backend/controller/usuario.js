@@ -1,4 +1,9 @@
 import { conectar, sql } from "../database/db.js";
+import jwt from "jsonwebtoken";
+import { config } from "dotenv";
+config();
+
+const SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 export const LoginUsuarioController = async (req, res) => {
   try {
@@ -11,13 +16,22 @@ export const LoginUsuarioController = async (req, res) => {
       .input("Contrasenia", sql.VarChar, contrasenia)
       .execute("GetUserData");
 
+    console.log(resultado);
     resultado = resultado.recordset[0];
 
     if (resultado.codigo_estado !== 0) {
       return res.status(401).send({ mensaje: resultado.mensaje });
     }
 
-    return res.status(200).send(resultado);
+    const payload = {
+      persona_id: resultado.persona_id,
+      usuario_id: resultado.usuario_id,
+      tipo_persona_id: resultado.tipo_persona_id,
+    };
+
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
+
+    res.json({ token });
   } catch (error) {
     console.error(error);
     return res.status(500).send(error);
