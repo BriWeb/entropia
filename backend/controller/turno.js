@@ -1,4 +1,7 @@
 import { conectar, sql } from "../database/db.js";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc.js";
+dayjs.extend(utc);
 
 /*export const GetTurnosController = async (req, res) => {
   try {
@@ -68,10 +71,20 @@ export const GetTurnosController = async (req, res) => {
           console.log("La consulta es:", consulta);
       }
       let resultado = await request.query(consulta);
-      const respuesta = resultado.recordset;
+      let respuesta = resultado.recordset;
+      
       if (respuesta.length === 0) {
           return res.status(404).json({ mensaje: "No se encontraron turnos." });
       }
+
+      respuesta = respuesta.map((registro) => ( //el map desde un array, juega con sus elementos y crea un array nuevo (sin modificar el original)
+        {
+        ...registro, // Esto copiaría todas las propiedades.
+        horario: dayjs.utc(registro.horario).format("HH:mm"),
+        fecha: dayjs.utc(registro.fecha).format("DD/MM/YYYY")
+        } 
+      ));
+
       return res.status(200).send(respuesta);
   }
   catch (error) {
@@ -122,9 +135,14 @@ export const GetAvailableTurnos = async (req, res) => {
           .input("Especialista", sql.Int, especialista_en_id)
           .input("FechaFinal", sql.Date, fechaFinal)  
           .execute("AvailableTurnos");
-      const respuesta = resultado.recordset;
 
-      console.log(respuesta);
+      const respuesta = resultado.recordset.map((registro) => (
+        {
+        //...registro, // Esto copiaría todas las propiedades, pero como vamos a modificar las únicas que tiene ('horario' y 'fecha'), no lo hacemos.
+        horario: dayjs.utc(registro.horario).format("HH:mm"),
+        fecha: dayjs.utc(registro.fecha).format("DD/MM/YYYY")
+        } ));
+
       return res.status(200).send(respuesta);
   }
   catch (error) {
