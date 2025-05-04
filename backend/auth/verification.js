@@ -17,6 +17,7 @@ export function verificarToken(req, res, next) {
       return res.status(403).json({ mensaje: "Token inválido" });
     }
     req.usuario = usuario; // payload del token
+    console.log("El payload es:", req.usuario);
     next();
   });
 }
