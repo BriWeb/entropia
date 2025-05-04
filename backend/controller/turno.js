@@ -72,7 +72,7 @@ export const GetTurnosController = async (req, res) => {
       if (respuesta.length === 0) {
           return res.status(404).json({ mensaje: "No se encontraron turnos." });
       }
-      return res.status(200).send(resultado.recordset);
+      return res.status(200).send(respuesta);
   }
   catch (error) {
       console.error(error);
@@ -110,3 +110,30 @@ export const AddTurnoController = async (req, res) => {
     }
 };
 
+export const GetAvailableTurnos = async (req, res) => {
+  let pool;
+  try {
+      const { especialista_en_id, fechaFinal } = req.query; //Estos van en el JSON del Postman. REINICIAR NODE SERVER ANTES
+      pool = await conectar();
+      if (!pool) {
+          throw new Error("No se pudo establecer la conexión a la base de datos.");
+      }
+      let resultado = await pool.request()
+          .input("Especialista", sql.Int, especialista_en_id)
+          .input("FechaFinal", sql.Date, fechaFinal)  
+          .execute("AvailableTurnos");
+      const respuesta = resultado.recordset;
+
+      console.log(respuesta);
+      return res.status(200).send(respuesta);
+  }
+  catch (error) {
+      console.error(error);
+      return res.status(500).send({ message: "Ocurrió un error inesperado." });
+  }
+  finally {
+      if (pool) {
+          pool.close();
+      }
+  }
+};
