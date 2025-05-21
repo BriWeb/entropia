@@ -27,6 +27,7 @@ export const LoginUsuarioController = async (req, res) => {
       persona_id: resultado.persona_id,
       usuario_id: resultado.usuario_id,
       tipo_persona_id: resultado.tipo_persona_id,
+      is_admin: resultado.is_admin,
     };
 
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });

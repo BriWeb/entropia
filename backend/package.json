@@ -1,6 +1,6 @@
 {
   "name": "entropia",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Proyecto para la materia Desarrollo de sistemas de informacion orientadio a la gestion y apoyo a las decisiones",
   "main": "index.js",
   "type": "module",

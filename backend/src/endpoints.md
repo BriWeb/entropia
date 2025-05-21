@@ -49,7 +49,7 @@ headers: {
 }
 ```
 
-En caso de no proporcionar un token, la respuesta de cualquier endpoint sera:
+En caso de no proporcionar un token, la respuesta de cualquier endpoint será:
 
 ```json
 {
@@ -57,7 +57,7 @@ En caso de no proporcionar un token, la respuesta de cualquier endpoint sera:
 }
 ```
 
-En caso de proporcionar un token inválido, la respuesta de cualquier endpoint sera:
+En caso de proporcionar un token inválido, la respuesta de cualquier endpoint será:
 
 ```json
 {
@@ -72,7 +72,7 @@ En caso de proporcionar un token inválido, la respuesta de cualquier endpoint s
 **GET** `/persona/3`
 
 - **Descripcion:** Busca una persona por _id_
-- **Parámetros:** Recibe el _id_ de la persona a través de query params
+- **Parámetros:** Recibe el _id_ de la persona a través de url params
 
 ```js
 `/persona/${id}`;
@@ -88,7 +88,7 @@ En caso de proporcionar un token inválido, la respuesta de cualquier endpoint s
   "persona_id": 3,
   "nombre": "Pedro",
   "apellido": "Rosa",
-  "documento": "52.566.129",
+  "documento": "52566129",
   "tipo_persona_descripcion": "Medico",
   "tipo_persona_id": 2,
   "obra_social": null,
@@ -104,7 +104,7 @@ En caso de proporcionar un token inválido, la respuesta de cualquier endpoint s
 
 ```json
 {
-  "mensaje": "No existe un paciente con ese id."
+  "mensaje": "No existe una persona con ese id."
 }
 ```
 
@@ -132,7 +132,7 @@ En caso de proporcionar un token inválido, la respuesta de cualquier endpoint s
   "paciente_id": 1,
   "nombre": "Juan",
   "apellido": "Villarba",
-  "documento": "42.678.351",
+  "documento": "42678351",
   "obra_social": 1
 }
 ```
@@ -161,7 +161,7 @@ En caso de proporcionar un token inválido, la respuesta de cualquier endpoint s
 {
   "nombre": "Nuevo",
   "apellido": "Paciente",
-  "documento": "48.200.699",
+  "documento": "48200699",
   "obra_social": 0
 }
 ```
@@ -177,6 +177,16 @@ En caso de proporcionar un token inválido, la respuesta de cualquier endpoint s
 }
 ```
 
+#### **Caso de error**
+
+- **Código:** 200 OK
+- **Respuesta:** Devuelve un json con un mensaje de error
+
+````json
+{
+  "mensaje": "Ocurrió un error inesperado."
+}
+
 ---
 
 ### Agregar médico
@@ -190,10 +200,10 @@ En caso de proporcionar un token inválido, la respuesta de cualquier endpoint s
 {
   "nombre": "Nuevo",
   "apellido": "Médico",
-  "documento": "51.203.109",
+  "documento": "51203109",
   "especialidad_id": 2
 }
-```
+````
 
 #### **Caso de éxito**
 
@@ -205,6 +215,16 @@ En caso de proporcionar un token inválido, la respuesta de cualquier endpoint s
   "medico_id": 1
 }
 ```
+
+#### **Caso de error**
+
+- **Código:** 200 OK
+- **Respuesta:** Devuelve un json con un mensaje de error
+
+````json
+{
+  "mensaje": "Ocurrió un error inesperado."
+}
 
 ---
 
@@ -219,10 +239,10 @@ En caso de proporcionar un token inválido, la respuesta de cualquier endpoint s
 {
   "nombre": "Nuevo",
   "apellido": "Recepcionista",
-  "documento": "51.203.109",
-  "legajo": 2
+  "documento": "51203109",
+  "legajo": "2337"
 }
-```
+````
 
 #### **Caso de éxito**
 
@@ -326,13 +346,13 @@ En caso de proporcionar un token inválido, la respuesta de cualquier endpoint s
 
 ### Buscar un turno
 
-**GET** `/turno/50`
+**GET** `/turno?id=50`
 
 - **Descripcion:** Busca un turno filtrado por id
 - **Parámetros:** Recibe el _id_ del turno a través de query params
 
 ```js
-`/turno/${id}`;
+`/turno?id=${id}`;
 ```
 
 #### **Caso de éxito**
@@ -372,6 +392,90 @@ En caso de proporcionar un token inválido, la respuesta de cualquier endpoint s
 ```json
 {
   "mensaje": "No se encontró turno."
+}
+```
+
+Los turnos también pueden ser filtrados por:
+
+- estado_turno_id,
+- horario_id,
+- fecha,
+- fecha_minima,
+- fecha_maxima,
+- medico_id,
+- especialista_en_id,
+- nombre_paciente,
+- apellido_paciente,
+- obra_social,
+- legajo.
+
+---
+
+### Agregar turno
+
+**POST** `/turno/add/`
+
+- **Descripcion:** Agrega un turno. Sólo lo puede usar un/a recepcionista
+- **Parámetros:** Recibe un json con los datos del turno a través del body
+
+```json
+{
+  "horario_id": 3,
+  "fecha": "2025-05-25",
+  "paciente_id": 9,
+  "medico_id": 2,
+  "recepcion_id": 3
+}
+```
+
+#### **Caso de éxito**
+
+- **Código:** `201 Created`
+- **Respuesta:** Devuelve un json con el id del turno
+
+```json
+{
+  "Id": 97
+}
+```
+
+#### **Caso de error**
+
+- **Código:** 200 OK
+- **Respuesta:** Devuelve un json con un mensaje de error
+
+```json
+{
+  "mensaje": "Ocurrió un error inesperado."
+}
+```
+
+---
+
+### Buscar turnos disponibles
+
+**GET** `/turno/available?especialista_en_id=1&fecha_final=2025-05-17`
+
+- **Descripcion:** Busca todos los turnos disponibles
+- **Parámetros:** Recibe _especialista_en_id_ y _fecha_final_ del turno a través de query params
+
+#### **Caso de éxito**
+
+- **Código:** 200 OK
+- **Respuesta:** Devuelve un json con todos los turnos disponibles
+
+```js
+`/turno/available?especialista_en_id=${especialista_en_id}&fecha_final=${fecha_final}`;
+```
+
+#### **Caso de error**
+
+- **Código:** 200 OK
+- **Respuesta:** Devuelve un json con un mensaje de error
+
+```json
+{
+  "mensaje": "No se encontraron turnos."
 }
 ```
 
