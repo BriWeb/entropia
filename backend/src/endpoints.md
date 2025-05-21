@@ -2,7 +2,7 @@
 
 ### Login
 
-**POST** `/usuarios/login`
+**POST** `/usuario/login`
 
 - **Descripción:** Valida que _usuario_ y _contraseña_ ingresados pertenezcan a una cuenta
 - **Parámetros:** Recibe un json con el _usuario_ y la _contraseña_ a través del body

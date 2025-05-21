@@ -13,10 +13,16 @@ config();
 const app = express();
 
 let port = process.env.NODE_PORT;
-let host = process.env.NODE_SERVER;
+let host = "127.0.0.1";
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000", // o "*"
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 
@@ -33,7 +39,10 @@ if (fs.existsSync("./pruebas")) {
   try {
     const pruebasRoutes = await import("./pruebas/routes/pruebas.js");
     app.use(pruebasRoutes.default);
-  } catch (error) { console.error("Error al cargar las rutas de pruebas:", error);} }
+  } catch (error) {
+    console.error("Error al cargar las rutas de pruebas:", error);
+  }
+}
 
 // Middleware para manejar errores 404
 app.use((req, res, next) => {

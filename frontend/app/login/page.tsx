@@ -1,11 +1,15 @@
 "use client"; // pára q ue Next.js sepa que el codigo se ejecuta en el navegador y no en el servidor
 
-import { useState } from "react"; 
-import { useRouter } from "next/navigation"; 
-import { Input } from "@/components/ui/input"; 
-import { Button } from "@/components/ui/button"; 
-import { Card } from "@/components/ui/card"; 
-import { Separator } from "@/components/ui/separator"; 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import Loading from "@/components/ui/loading";
+import Error from "@/components/ui/error";
+
+import { useFetch } from "@/hooks/useFetch";
 
 export default function LoginPage() {
   // Acá guardo las herramientas que necesito para cambiar de página y guardar lo que escribe el usuario
@@ -14,30 +18,55 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
+  interface LoginResponse {
+    token: string;
+    tipo_usuario: number | null;
+  }
+
+  const { loading, data, error, fetchNow } = useFetch<LoginResponse>();
+
   // Esto se ejecuta cuando el usuario hace clic en "Iniciar sesión"
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Acá verifico si el usuario escribió algo en los campos
     if (!email || !password) {
-      alert("Por favor ingrese su correo y contraseña");
+      alert("Por favor ingrese su cuenta y contraseña");
       return;
     }
 
-    // Acá verifico qué tipo de usuario es para mandarlo a su página
-    if (email === "recepcionista@ejemplo.com") {
-      router.push("/secretaria/dashboard"); // Esto lo manda a la página de secretaria
-    } else if (email === "doctor@ejemplo.com") {
-      router.push("/doctor/dashboard"); // Esto lo manda a la página de doctor
-    } else {
-      alert("Credenciales incorrectas"); // Esto le avisa que los datos están mal
-    }
+    fetchNow({
+      url: `${process.env.NEXT_PUBLIC_API_URL}/usuario/login`,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: {
+        usuario: email,
+        contrasenia: password,
+      },
+    });
   };
+
+  useEffect(() => {
+    if (data) {
+      const { token, tipo_usuario } = data;
+
+      // se guarda el token en el localStorage
+      localStorage.setItem("myToken", token);
+
+      // Acá verifico qué tipo de usuario es para mandarlo a su página
+      if (tipo_usuario === 3) {
+        router.push("/secretaria/dashboard"); // Esto lo manda a la página de secretaria
+      } else if (tipo_usuario === 2) {
+        router.push("/doctor/dashboard"); // Esto lo manda a la página de doctor
+      }
+    }
+  }, [data]);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4">
       <div className="w-full max-w-md space-y-6 text-center">
-        
         <div className="space-y-2">
           <h1 className="text-3xl font-bold">Sistema de turnos</h1>
           <p className="text-gray-500">Inicie sesión en su cuenta</p>
@@ -48,27 +77,28 @@ export default function LoginPage() {
           <form onSubmit={handleLogin} className="space-y-4">
             {/* Esto es el campo para el correo */}
             <div className="space-y-2">
-              <label 
-                htmlFor="email" 
+              <label
+                htmlFor="email"
                 className="block text-sm font-medium text-left"
               >
-                Correo electrónico
+                {/* Correo electrónico */}
+                Cuenta
               </label>
               <Input
                 id="email"
-                type="email"
+                // type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)} // Esto guarda lo que escribe
-                placeholder="correo@ejemplo.com"
+                // placeholder="correo@ejemplo.com"
                 className="w-full"
                 required
               />
             </div>
-
             {/* Esto es el campo para la contraseña */}
             <div className="space-y-2">
-              <label 
-                htmlFor="password" 
+              <label
+                htmlFor="password"
                 className="block text-sm font-medium text-left"
               >
                 Contraseña
@@ -83,7 +113,6 @@ export default function LoginPage() {
                 required
               />
             </div>
-
             {/*  "Recuérdame" y "Olvidó su contraseña" */}
             <div className="flex items-center justify-between">
               <div className="flex items-center">
@@ -94,28 +123,25 @@ export default function LoginPage() {
                   onChange={(e) => setRememberMe(e.target.checked)} // Esto guarda si marcó el checkbox
                   className="h-4 w-4 rounded border-gray-300"
                 />
-                <label 
-                  htmlFor="remember-me" 
+                <label
+                  htmlFor="remember-me"
                   className="ml-2 block text-sm text-gray-700"
                 >
                   Recuérdame
                 </label>
               </div>
-              <a 
-                href="#" 
-                className="text-sm text-gray-700 hover:underline"
-              >
+              <a href="#" className="text-sm text-gray-700 hover:underline">
                 ¿Olvidó su contraseña?
               </a>
             </div>
-
             {/* Esto es el botón para enviar el formulario */}
-            <Button 
-              type="submit" 
-              className="w-full"
-            >
+            <Button type="submit" className="w-full">
               Iniciar sesión
             </Button>
+
+            {/* {(loading || error) && <Status loading={loading} error={error} />} */}
+            {loading && <Loading />}
+            {error && <Error error={error} />}
           </form>
         </Card>
 
@@ -126,12 +152,12 @@ export default function LoginPage() {
           <div className="grid grid-cols-2 gap-2 text-xs">
             <div className="rounded-md border p-2">
               <p className="font-medium">Recepcionista</p>
-              <p>recepcionista@ejemplo.com</p>
-              <p>123456</p>
+              <p>vamado</p>
+              <p>1234</p>
             </div>
             <div className="rounded-md border p-2">
               <p className="font-medium">Doctor</p>
-              <p>doctor@ejemplo.com</p>
+              <p>esprado</p>
               <p>123456</p>
             </div>
           </div>

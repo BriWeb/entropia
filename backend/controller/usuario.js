@@ -16,7 +16,7 @@ export const LoginUsuarioController = async (req, res) => {
       .input("Contrasenia", sql.VarChar, contrasenia)
       .execute("GetUserData");
 
-    console.log(resultado);
+    // console.log(resultado);
     resultado = resultado.recordset[0];
 
     if (resultado.codigo_estado !== 0) {
@@ -32,7 +32,7 @@ export const LoginUsuarioController = async (req, res) => {
 
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
 
-    res.json({ token });
+    res.json({ tipo_usuario: resultado.tipo_persona_id, token });
   } catch (error) {
     console.error(error);
     return res.status(500).send(error);
