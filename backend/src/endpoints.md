@@ -17,10 +17,11 @@
 #### **Caso de éxito**
 
 - **Código:** `200 OK`
-- **Respuesta:** Devuelve un json con el token del usuario
+- **Respuesta:** Devuelve un json con el token y el tipo de usuario
 
 ```json
 {
+  "tipo_usuario": 2,
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25hX2lkIjoyNiwidXN1YXJpb19pZCI6MywidGlwb19wZXJzb25hX2lkIjoyLCJpYXQiOjE3NDU3MDAwNjgsImV4cCI6MTc0NTcwMzY2OH0.XDHB3aYVXJSVptHGlBCYXQek6NwRDSA-C5PCljq2L2w"
 }
 ```

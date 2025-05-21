@@ -1,7 +1,7 @@
 # Entropía - Sistema Web
 
 Proyecto fullstack educativo.
-Desarrollado por equipo "**entropia**", para la materia **Desarrollo de Sistemas de Información orientados a la gestión y apoyo a las decisiones** del IFTS11, con frontend en **React** y backend en **Node.js** + **SQL Server**.
+Desarrollado por equipo "**entropia**", para la materia **Desarrollo de Sistemas de Información orientados a la gestión y apoyo a las decisiones** del IFTS11, con frontend en **Next.js** y backend en **Node.js** + **SQL Server**.
 
 ---
 
@@ -67,8 +67,14 @@ DB_NAME=entropia
 DB_USER=
 DB_PASSWORD_LOCAL=
 DB_PASSWORD_NUBE=
-NODE_PORT=8080
+NODE_PORT=3001
 JWT_SECRET_KEY=ENTROPIA
+```
+
+### Frontend (`frontend/.env.local`)
+
+```env
+NEXT_PUBLIC_API_URL=http://127.0.0.1:3001
 ```
 
 ---
@@ -93,14 +99,14 @@ npm run dev
 
 ## 📦 Build del frontend
 
-Para generar el build de React:
+Para generar el build de Next:
 
 ```bash
 cd frontend
 npm run build
 ```
 
-Esto genera una carpeta `dist/` para servir desde el backend o subir a un hosting.
+Esto genera una carpeta `.next/` para servir desde el backend o subir a un hosting.
 
 ---
 
