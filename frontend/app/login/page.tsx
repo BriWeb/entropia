@@ -10,6 +10,8 @@ import Loading from "@/components/ui/loading";
 import Error from "@/components/ui/error";
 
 import { useFetch } from "@/hooks/useFetch";
+import { ThemeModeToggle } from "@/components/general/theme-mode-toggle";
+import { ThemeColorToggle } from "@/components/general/theme-color-toggle";
 
 export default function LoginPage() {
   // Acá guardo las herramientas que necesito para cambiar de página y guardar lo que escribe el usuario
@@ -64,6 +66,10 @@ export default function LoginPage() {
     }
   }, [data]);
 
+  if (error) {
+    return <Error error={error} />;
+  }
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4">
       <div className="w-full max-w-md space-y-6 text-center">
@@ -73,7 +79,7 @@ export default function LoginPage() {
         </div>
 
         {/* Acá está el formulario dentro de la card blanca */}
-        <Card className="bg-white p-6">
+        <Card className="bg-secondary p-6">
           <form onSubmit={handleLogin} className="space-y-4">
             {/* Esto es el campo para el correo */}
             <div className="space-y-2">
@@ -125,7 +131,7 @@ export default function LoginPage() {
                 />
                 <label
                   htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-700"
+                  className="ml-2 block text-sm text-primary-700"
                 >
                   Recuérdame
                 </label>
@@ -141,7 +147,6 @@ export default function LoginPage() {
 
             {/* {(loading || error) && <Status loading={loading} error={error} />} */}
             {loading && <Loading />}
-            {error && <Error error={error} />}
           </form>
         </Card>
 
@@ -159,6 +164,16 @@ export default function LoginPage() {
               <p className="font-medium">Doctor</p>
               <p>esprado</p>
               <p>123456</p>
+            </div>
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Separator />
+          <h2 className="text-sm font-medium">Cambio de color de fondo</h2>
+          <div className="grid grid-cols-1 gap-2 text-xs">
+            <div className="flex w-full justify-center rounded-md border p-2 bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto">
+              <ThemeColorToggle />
+              <ThemeModeToggle />
             </div>
           </div>
         </div>
