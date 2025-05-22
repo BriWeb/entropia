@@ -46,7 +46,7 @@ De aquí en adelante todos los endpoints son privados, por lo que para acceder s
 ```js
 headers: {
   'Content-Type': 'application/json',
-  'Authorization': 'Bearer ' + localStorage.getItem('token')
+  'Authorization': 'Bearer ' + localStorage.getItem('myToken')
 }
 ```
 
@@ -183,10 +183,11 @@ En caso de proporcionar un token inválido, la respuesta de cualquier endpoint s
 - **Código:** 200 OK
 - **Respuesta:** Devuelve un json con un mensaje de error
 
-````json
+```json
 {
   "mensaje": "Ocurrió un error inesperado."
 }
+```
 
 ---
 
@@ -204,7 +205,7 @@ En caso de proporcionar un token inválido, la respuesta de cualquier endpoint s
   "documento": "51203109",
   "especialidad_id": 2
 }
-````
+```
 
 #### **Caso de éxito**
 
@@ -222,10 +223,11 @@ En caso de proporcionar un token inválido, la respuesta de cualquier endpoint s
 - **Código:** 200 OK
 - **Respuesta:** Devuelve un json con un mensaje de error
 
-````json
+```json
 {
   "mensaje": "Ocurrió un error inesperado."
 }
+```
 
 ---
 
@@ -243,7 +245,7 @@ En caso de proporcionar un token inválido, la respuesta de cualquier endpoint s
   "documento": "51203109",
   "legajo": "2337"
 }
-````
+```
 
 #### **Caso de éxito**
 
@@ -260,10 +262,14 @@ En caso de proporcionar un token inválido, la respuesta de cualquier endpoint s
 
 ### Buscar turnos
 
-**GET** `/turno`
+**GET** `/turno?limit=20&offset=0`
 
 - **Descripcion:** Busca todos los turnos
-- **Parámetros:** No recibe nada
+- **Parámetros:** Recibe el _limit_ y _offset_ a través de query params
+
+```js
+`/turno?limit=${limit}&offset=${offset}`;
+```
 
 #### **Caso de éxito**
 

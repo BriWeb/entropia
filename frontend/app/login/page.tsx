@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import Loading from "@/components/ui/loading";
 import Error from "@/components/ui/error";
 
-import { useFetch } from "@/hooks/useFetch";
+import { useFetchCallback } from "@/hooks/useFetchCallback";
 
 export default function LoginPage() {
   // Acá guardo las herramientas que necesito para cambiar de página y guardar lo que escribe el usuario
@@ -23,7 +23,7 @@ export default function LoginPage() {
     tipo_usuario: number | null;
   }
 
-  const { loading, data, error, fetchNow } = useFetch<LoginResponse>();
+  const { loading, data, error, fetchNow } = useFetchCallback<LoginResponse>();
 
   // Esto se ejecuta cuando el usuario hace clic en "Iniciar sesión"
   const handleLogin = (e: React.FormEvent) => {

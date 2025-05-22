@@ -20,100 +20,133 @@ dayjs.extend(utc);
   }  
 };*/
 
+const applyFilters = (filters, pool) => {
+  const {
+    id,
+    estado_turno_id,
+    horario_id,
+    fecha,
+    fecha_minima,
+    fecha_maxima,
+    medico_id,
+    especialista_en_id,
+    nombre_paciente,
+    apellido_paciente,
+    obra_social,
+    legajo,
+  } = filters;
+
+  const request = pool.request();
+
+  const condiciones = [];
+
+  if (id) {
+    condiciones.push("id = @id");
+    request.input("id", sql.Int, id);
+  }
+  if (estado_turno_id) {
+    condiciones.push("estado_turno_id = @estado_turno_id");
+    request.input("estado_turno_id", sql.Int, estado_turno_id);
+  }
+  if (horario_id) {
+    condiciones.push("horario_id = @horario_id");
+    request.input("horario_id", sql.Int, horario_id);
+  }
+  if (fecha) {
+    condiciones.push("fecha = @fecha");
+    request.input("fecha", sql.Date, fecha);
+  }
+  if (fecha_minima) {
+    condiciones.push("fecha >= @fecha_minima");
+    request.input("fecha_minima", sql.Date, fecha_minima);
+  }
+  if (fecha_maxima) {
+    condiciones.push("fecha <= @fecha_maxima");
+    request.input("fecha_maxima", sql.Date, fecha_maxima);
+  }
+  if (medico_id) {
+    condiciones.push("medico_id = @medico_id");
+    request.input("medico_id", sql.Int, medico_id);
+  }
+  if (especialista_en_id) {
+    condiciones.push("especialista_en_id = @especialista_en_id");
+    request.input("especialista_en_id", sql.Int, especialista_en_id);
+  }
+  if (nombre_paciente) {
+    condiciones.push("nombre_paciente = @nombre_paciente");
+    request.input("nombre_paciente", sql.VarChar, nombre_paciente);
+  }
+  if (apellido_paciente) {
+    condiciones.push("apellido_paciente = @apellido_paciente");
+    request.input("apellido_paciente", sql.VarChar, apellido_paciente);
+  }
+  if (obra_social) {
+    condiciones.push("obra_social = @obra_social");
+    request.input("obra_social", sql.Bit, obra_social);
+  }
+  if (legajo) {
+    condiciones.push("legajo = @legajo");
+    request.input("legajo", sql.VarChar, legajo);
+  }
+
+  return { condiciones, request };
+};
+
 export const GetTurnosController = async (req, res) => {
-  //let pool;
   try {
     const pool = await conectar();
     if (!pool) {
       throw new Error("No se pudo establecer la conexión a la base de datos.");
     }
-    const {
-      id,
-      estado_turno_id,
-      horario_id,
-      fecha,
-      fecha_minima,
-      fecha_maxima,
-      medico_id,
-      especialista_en_id,
-      nombre_paciente,
-      apellido_paciente,
-      obra_social,
-      legajo,
-    } = req.query;
-    const request = pool.request();
-    let consulta = "SELECT * FROM GetTurnos";
-    const condiciones = [];
+    let { limit, offset } = req.query;
+    limit = parseInt(limit);
+    offset = parseInt(offset);
 
-    if (id) {
-      condiciones.push("id = @id");
-      request.input("id", sql.Int, id);
-    }
-    if (estado_turno_id) {
-      condiciones.push("estado_turno_id = @estado_turno_id");
-      request.input("estado_turno_id", sql.Int, estado_turno_id);
-    }
-    if (horario_id) {
-      condiciones.push("horario_id = @horario_id");
-      request.input("horario_id", sql.Int, horario_id);
-    }
-    if (fecha) {
-      condiciones.push("fecha = @fecha");
-      request.input("fecha", sql.Date, fecha);
-    }
-    if (fecha_minima) {
-      condiciones.push("fecha >= @fecha_minima");
-      request.input("fecha_minima", sql.Date, fecha_minima);
-    }
-    if (fecha_maxima) {
-      condiciones.push("fecha <= @fecha_maxima");
-      request.input("fecha_maxima", sql.Date, fecha_maxima);
-    }
-    if (medico_id) {
-      condiciones.push("medico_id = @medico_id");
-      request.input("medico_id", sql.Int, medico_id);
-    }
-    if (especialista_en_id) {
-      condiciones.push("especialista_en_id = @especialista_en_id");
-      request.input("especialista_en_id", sql.Int, especialista_en_id);
-    }
-    if (nombre_paciente) {
-      condiciones.push("nombre_paciente = @nombre_paciente");
-      request.input("nombre_paciente", sql.VarChar, nombre_paciente);
-    }
-    if (apellido_paciente) {
-      condiciones.push("apellido_paciente = @apellido_paciente");
-      request.input("apellido_paciente", sql.VarChar, apellido_paciente);
-    }
-    if (obra_social) {
-      condiciones.push("obra_social = @obra_social");
-      request.input("obra_social", sql.Bit, obra_social);
-    }
-    if (legajo) {
-      condiciones.push("legajo = @legajo");
-      request.input("legajo", sql.VarChar, legajo);
-    }
+    if (isNaN(limit)) limit = 20;
+    if (isNaN(offset)) offset = 0;
+
+    // ----------------
+    // PARA EL COUNT
+    let { condiciones, request } = applyFilters(req.query, pool);
+    let consulta = "SELECT * FROM GetTurnos";
     // Si hay condiciones se unen con "AND" y se agregan a la consulta
     if (condiciones.length > 0) {
       consulta += " WHERE " + condiciones.join(" AND ");
-      console.log("La consulta es:", consulta);
     }
-    let resultado = await request.query(consulta);
-    let respuesta = resultado.recordset;
+    const consultaCount = `SELECT COUNT(*) AS total FROM (${consulta}) AS conteo`;
+    let totalCount = await request.query(consultaCount); //count
+    // ----------------
 
-    if (respuesta.length === 0) {
+    // ----------------
+    // PARA LA PAGINACIÓN
+    /* 
+    El anterior request (del count) queda cerrado y no puede reutilizarse, por lo que
+    creamos uno nuevo y volvemos a agregar los inputs
+    */
+    const { request: dataRequest } = applyFilters(req.query, pool);
+
+    dataRequest.input("limit", sql.Int, limit);
+    dataRequest.input("offset", sql.Int, offset);
+
+    consulta +=
+      " ORDER BY id desc OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY";
+
+    let resultado = await dataRequest.query(consulta);
+    // ----------------
+    // console.log(resultado);
+    const count = totalCount.recordset[0].total;
+    const rows = resultado.recordset;
+    let respuesta = { count, rows };
+
+    if (respuesta.rows.length === 0) {
       return res.status(404).json({ mensaje: "No se encontraron turnos." });
     }
 
-    respuesta = respuesta.map(
-      (
-        registro //el map desde un array, juega con sus elementos y crea un array nuevo (sin modificar el original)
-      ) => ({
-        ...registro, // Esto copiaría todas las propiedades.
-        horario: dayjs.utc(registro.horario).format("HH:mm"),
-        fecha: dayjs.utc(registro.fecha).format("DD/MM/YYYY"),
-      })
-    );
+    respuesta.rows = respuesta.rows.map((registro) => ({
+      ...registro, // Esto copiaría todas las propiedades.
+      horario: dayjs.utc(registro.horario).format("HH:mm"),
+      fecha: dayjs.utc(registro.fecha).format("DD/MM/YYYY"),
+    }));
 
     return res.status(200).send(respuesta);
   } catch (error) {
