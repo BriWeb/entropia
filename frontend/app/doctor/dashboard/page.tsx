@@ -1,7 +1,12 @@
+"use client";
+
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function DashboardDoctor() {
+
+    const { usuario } = useAuth();
     // turnos de ejemplo, despues se agrega de la base de datos
     const turnosHoy = [
         { id: 1, hora: '09:00', paciente: 'Juan Pérez', estado: 'Pendiente', notas: 'Control mensual' },
@@ -34,7 +39,7 @@ export default function DashboardDoctor() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 
                 <div>
-                    <h1 className="text-2xl font-bold">Bienvenido Dr. Carlos Rodríguez</h1>
+                    <h1 className="text-2xl font-bold">Bienvenido {usuario?.nombre}</h1>
                     <p className="text-sm text-gray-500">Panel de gestión de turnos y pacientes</p>
                 </div>
 

@@ -4,12 +4,14 @@ import NavBar from "@/components/general/NavBar"
 import { LayoutDashboard, UserCircle, Calendar, Clock, Users, Settings, LogOut, Menu, X } from "lucide-react"
 import Link from "next/link"
 import { useState, useEffect } from "react"
+import { useAuth } from "../context/AuthContext"
 
 export default function SecretariaLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+    const { usuario } = useAuth();
     // Valores predeterminados que funcionan tanto en servidor como cliente
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
@@ -43,10 +45,10 @@ export default function SecretariaLayout({
             {isClient && (
                 <aside className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
                                 md:translate-x-0 w-64 bg-white shadow-lg transition-all duration-300 
-                                fixed md:fixed top-0 left-0 h-screen z-50 overflow-y-auto`}>
+                                fixed md:fixed top-0 left-0 h-screen z-50 overflow-y-auto pt-14`}>
                     <div className="h-full flex flex-col bg-white">
                         <div className="flex justify-between items-center p-4 border-b">
-                            <h1 className="text-xl font-bold">Dashboard</h1>
+                            
                             {isMobile && (
                                 <button onClick={toggleSidebar} className="md:hidden">
                                     <X size={24} />
@@ -87,8 +89,13 @@ export default function SecretariaLayout({
                         {/* Perfil y Logout */}
                         <div className="p-4 border-t">
                             <div className="mb-4">
-                                <p className="font-medium">María González</p>
-                                <p className="text-sm text-gray-500">Recepcionista</p>
+                                <div className="flex items-center gap-2">
+                                    <UserCircle size={20} className="text-gray-500 self-start mt-1" />
+                                    <div>
+                                        <p className="font-medium">{usuario?.nombre}</p>
+                                        <p className="text-sm text-gray-500">{usuario?.tipo_persona_descripcion}</p>
+                                    </div>
+                                </div>
                             </div>
                             <button className="flex items-center gap-2 p-2 w-full hover:bg-red-50 text-red-600 rounded-lg">
                                 <LogOut size={20} />
