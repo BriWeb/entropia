@@ -87,7 +87,6 @@ export function useFetch<T = unknown>({
     JSON.stringify(body),
     requiredAuth,
   ]);
-  // }, [url, method, body, requiredAuth]);
 
   return { loading, data, error };
 }
