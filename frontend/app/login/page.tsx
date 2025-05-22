@@ -12,8 +12,12 @@ import Error from "@/components/ui/error";
 import { useFetchCallback } from "@/hooks/useFetchCallback";
 import { ThemeModeToggle } from "@/components/general/theme-mode-toggle";
 import { ThemeColorToggle } from "@/components/general/theme-color-toggle";
+import { useAuth } from "@/app/context/AuthContext";
+import { Usuario } from "@/types/usuario";
 
 export default function LoginPage() {
+  const { setUsuario } = useAuth();
+
   // Acá guardo las herramientas que necesito para cambiar de página y guardar lo que escribe el usuario
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -22,7 +26,7 @@ export default function LoginPage() {
 
   interface LoginResponse {
     token: string;
-    tipo_usuario: number | null;
+    usuario: Usuario;
   }
 
   const { loading, data, error, fetchNow } = useFetchCallback<LoginResponse>();
@@ -52,15 +56,18 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (data) {
-      const { token, tipo_usuario } = data;
+      const { token, usuario } = data;
 
       // se guarda el token en el localStorage
       localStorage.setItem("myToken", token);
 
+      // se guarda el usuario en el contexto global
+      setUsuario(usuario);
+
       // Acá verifico qué tipo de usuario es para mandarlo a su página
-      if (tipo_usuario === 3) {
+      if (usuario.tipo_persona_id === 3) {
         router.push("/secretaria/dashboard"); // Esto lo manda a la página de secretaria
-      } else if (tipo_usuario === 2) {
+      } else if (usuario.tipo_persona_id === 2) {
         router.push("/doctor/dashboard"); // Esto lo manda a la página de doctor
       }
     }

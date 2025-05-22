@@ -32,7 +32,7 @@ export const LoginUsuarioController = async (req, res) => {
 
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
 
-    res.json({ tipo_usuario: resultado.tipo_persona_id, token });
+    res.json({ usuario: resultado, token });
   } catch (error) {
     console.error(error);
     return res.status(500).send(error);
