@@ -5,12 +5,13 @@ import NavBar from "@/components/general/NavBar"
 import { LayoutDashboard, UserCircle, Calendar, Settings, LogOut, Menu, X } from "lucide-react" 
 import Link from "next/link" 
 import { useState, useEffect } from "react" 
-
+import { useAuth } from "../context/AuthContext"
 export default function DoctorLayout({
     children, 
 }: {
     children: React.ReactNode
 }) {
+    const { usuario } = useAuth();
     // Acá guardo información sobre si el menú está abierto y si es celular o computadora
     const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Si el menú lateral está abierto
     const [isMobile, setIsMobile] = useState(false); // Si estoy en celular
@@ -45,12 +46,12 @@ export default function DoctorLayout({
             {/* este es el menu lateral (sidebar) */}
             {isClient && (
                 <aside className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
-                                md:translate-x-0 w-64 bg-secondary shadow-lg transition-all duration-300 
-                                fixed md:fixed top-0 left-0 h-screen z-50 overflow-y-auto`}>
-                    <div className="h-full flex flex-col bg-secondary">
+                                md:translate-x-0 w-64 bg-white shadow-lg transition-all duration-300 
+                                fixed md:fixed top-0 left-0 h-screen z-50 overflow-y-auto pt-14`}>
+                    <div className="h-full flex flex-col bg-white">
+
                         {/* titulo del dashboard y boton para cerrar en celulares */}
                         <div className="flex justify-between items-center p-4 border-b">
-                            <h1 className="text-xl font-bold">Dashboard</h1>
                             {isMobile && (
                                 <button onClick={toggleSidebar} className="md:hidden">
                                     <X size={24} />
@@ -83,8 +84,13 @@ export default function DoctorLayout({
                         {/* aca esta el nombre del doctor y el boton para salir */}
                         <div className="p-4 border-t">
                             <div className="mb-4">
-                                <p className="font-medium">Dr. Carlos Rodríguez</p>
-                                <p className="text-sm text-gray-500">Cardiología</p>
+                                <div className="flex items-center gap-2">
+                                    <UserCircle size={20} className="text-gray-500 self-start mt-1" />
+                                    <div>
+                                        <p className="font-medium">{usuario?.nombre}</p>
+                                        <p className="text-sm text-gray-500">{usuario?.tipo_persona_descripcion}</p>
+                                    </div>
+                                </div>
                             </div>
                             <button className="flex items-center gap-2 p-2 w-full hover:bg-red-50 text-red-600 rounded-lg">
                                 <LogOut size={20} />
