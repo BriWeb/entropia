@@ -1,4 +1,6 @@
 import { conectar, sql } from "../database/db.js";
+import { evaluateError } from "../auth/evaluateError.js";
+
 export const AddPacienteController = async (req, res) => {
   let pool;
   try {

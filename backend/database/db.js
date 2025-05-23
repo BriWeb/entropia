@@ -27,6 +27,7 @@ async function conectar() {
     return pool;
   } catch (err) {
     console.error("Error de conexión:", err);
+    throw err;
   }
 }
 

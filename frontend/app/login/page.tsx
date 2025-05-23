@@ -55,6 +55,51 @@ export default function LoginPage() {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("myToken");
+    if (token) {
+      const validateToken = async () => {
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/usuario/validate`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          interface ValidateResponse {
+            ok: boolean;
+            mensaje: string;
+            usuario?: any;
+          }
+
+          const data: ValidateResponse = await response.json();
+
+          const { usuario } = data;
+          if (!data.ok) {
+            localStorage.removeItem("myToken");
+          } else {
+            console.log("El usuario es: ", usuario);
+            if (usuario.tipo_persona_id === 3) {
+              router.push("/secretaria/dashboard"); // Esto lo manda a la página de secretaria
+            } else if (usuario.tipo_persona_id === 2) {
+              router.push("/doctor/dashboard"); // Esto lo manda a la página de doctor
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      validateToken();
+    } else {
+      console.log("No hay token");
+    }
+  }, []);
+
+  useEffect(() => {
     if (data) {
       const { token, usuario } = data;
 
@@ -72,10 +117,6 @@ export default function LoginPage() {
       }
     }
   }, [data]);
-
-  if (error) {
-    return <Error error={error} />;
-  }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4">
@@ -152,7 +193,7 @@ export default function LoginPage() {
               Iniciar sesión
             </Button>
 
-            {/* {(loading || error) && <Status loading={loading} error={error} />} */}
+            {error && <Error error={error} />}
             {loading && <Loading />}
           </form>
         </Card>
@@ -170,7 +211,7 @@ export default function LoginPage() {
             <div className="rounded-md border p-2">
               <p className="font-medium">Doctor</p>
               <p>esprado</p>
-              <p>123456</p>
+              <p>1234</p>
             </div>
           </div>
         </div>

@@ -1,4 +1,6 @@
 import { conectar, sql } from "../database/db.js";
+import { evaluateError } from "../auth/evaluateError.js";
+
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 dayjs.extend(utc);

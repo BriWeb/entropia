@@ -1,4 +1,6 @@
 import { conectar, sql } from "../database/db.js";
+import { evaluateError } from "../auth/evaluateError.js";
+
 import jwt from "jsonwebtoken";
 import { config } from "dotenv";
 import { validateUser } from "../auth/validateUser.js";
@@ -49,7 +51,13 @@ export const LoginUsuarioController = async (req, res) => {
 
     res.json({ usuario: resultado, token });
   } catch (error) {
-    console.error(error);
-    return res.status(500).send(error);
+    console.error("Error al conectar o ejecutar:", error);
+
+    const mensaje = evaluateError(error);
+
+    res.status(500).json({
+      mensaje,
+      error: error.message,
+    });
   }
 };
