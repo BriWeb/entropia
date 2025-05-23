@@ -1,34 +1,40 @@
 # Entropía - Sistema Web
 
 Proyecto fullstack educativo.
-Desarrollado por equipo "**entropia**", para la materia **Desarrollo de Sistemas de Información orientados a la gestión y apoyo a las decisiones** del IFTS11, con frontend en **Next.js** y backend en **Node.js** + **SQL Server**.
+Desarrollado por equipo "**entropia**", para la materia **Desarrollo de Sistemas de Información orientados a la gestión y apoyo a las decisiones** del IFTS11, con frontend en **Next.js**, backend en **Node.js** y bases de datos con **SQL Server**.
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto 📁
 
 ```
 entropia/
-├── backend/     # Servidor Node.js con Express
-│   ├── auth/
-│   ├── controllers/
-│   ├── database/
-│   ├── routes/
-│   ├── src/
-│   ├── index.js
-│   └── .env
-├── frontend/    # Cliente en React
-│   ├── src/
-│   ├── public/
-│   ├── package.json
-│   └── .env
-├── .gitignore
-└── README.md
+├── backend/                # Servidor Node.js con Express
+│   ├── auth/               # Lógica de autenticación (JWT, login, etc.)
+│   ├── controller/         # Controladores de rutas
+│   ├── database/           # Configuración y acceso a la base de datos
+│   ├── routes/             # Definición de endpoints de la API
+│   ├── src/                # Código fuente adicional o utilidades
+│   ├── index.js            # Punto de entrada del servidor
+│   ├── .env                # Variables de entorno
+│   └── package.json        # Dependencias y scripts
+├── frontend/               # Cliente web desarrollado con Next.js
+│   ├── app/                # Páginas y rutas del lado del cliente (App Router)
+│   │   └── page.tsx        # Página principal
+│   ├── components/         # Componentes reutilizables de la interfaz
+│   ├── hooks/              # Custom React Hooks
+│   ├── public/             # Archivos estáticos (imágenes, íconos, etc.)
+│   ├── types/              # Definiciones TypeScript
+│   ├── package.json        # Dependencias y scripts
+│   └── .env.local          # Variables de entorno
+├── .gitignore              # Archivos y carpetas ignoradas por Git
+└── README.md               # Documentación principal del proyecto
+
 ```
 
 ---
 
-## 🔧 Configuración Inicial
+## Configuración Inicial 🔧
 
 ### 1. Clonar el proyecto
 
@@ -55,7 +61,7 @@ npm install
 
 ---
 
-## 🌐 Variables de entorno
+## Variables de entorno 🌐
 
 ### Backend (`backend/.env`)
 
@@ -79,7 +85,7 @@ NEXT_PUBLIC_API_URL=http://127.0.0.1:3001
 
 ---
 
-## ▶️ Cómo levantar el proyecto
+## Cómo levantar el proyecto ▶️
 
 ### Backend
 
@@ -97,7 +103,7 @@ npm run dev
 
 ---
 
-## 📦 Build del frontend
+## Build del frontend 📦
 
 Para generar el build de Next:
 
@@ -110,17 +116,7 @@ Esto genera una carpeta `.next/` para servir desde el backend o subir a un hosti
 
 ---
 
-## 👨‍💻 Autores
-
-- Equipo de compañeros – _Estudiantes en formación_
-- Luis Herrera – _Frontend_
-- Federico Estevez – _Backend_
-- Iara Baya – _Full Stack_
-- Brian Herrera – _DBA_
-
----
-
-## 💡 Funcionalidad
+## Funcionalidad
 
 Un sistema de **gestión de consultas médicas**.
 El sistema lo utiliza el personal de recepción y médicos.
@@ -149,5 +145,16 @@ El paciente proporciona su documento, y de encontrarse previamente en la base de
 El turno creado tendrá los datos del médico, del recepcionista, y del paciente.
 
 El médico da por iniciada la sesión, y cumplida su tarea la da por finalizada. Puede agregar una observación al turno.
+
+---
+
+## Autores 👨‍💻
+
+Proyecto desarrollado por un equipo de estudiantes en formación. A continuación, se detallan los roles y perfiles de cada integrante:
+
+- **[Luis Herrera](https://github.com/sanntzherrera1)** – Desarrollador Frontend
+- **[Federico Estevez](https://github.com/festev)** – Desarrollador Backend
+- **[Iara Baya](https://github.com/iarabaya)** – Desarrolladora Full Stack
+- **[Brian Herrera](https://github.com/BriWeb)** – Administrador de Bases de Datos
 
 ---
