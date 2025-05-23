@@ -1,9 +1,24 @@
 import { conectar, sql } from "../database/db.js";
 import jwt from "jsonwebtoken";
 import { config } from "dotenv";
+import { validateUser } from "../auth/validateUser.js";
 config();
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
+
+export const Validate = (req, res) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const usuario = validateUser(token);
+    if (!usuario)
+      return res.status(401).send({ ok: false, mensaje: "Token inválido" });
+
+    return res.status(200).send({ ok: true, mensaje: "Token válido", usuario });
+  } catch (error) {
+    return res.status(500).send({ ok: false, mensaje: error.message });
+  }
+};
 
 export const LoginUsuarioController = async (req, res) => {
   try {
