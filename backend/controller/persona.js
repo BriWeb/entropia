@@ -19,7 +19,13 @@ export const GetPersonaController = async (req, res) => {
 
     return res.status(200).send(resultado);
   } catch (error) {
-    console.error(error);
-    return res.status(500).send(error);
+    console.error("Error al conectar o ejecutar:", error);
+
+    const mensaje = evaluateError(error);
+
+    res.status(500).json({
+      mensaje,
+      error: error.message,
+    });
   }
 };

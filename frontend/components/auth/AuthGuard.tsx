@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -15,6 +15,7 @@ interface ValidateResponse {
 
 export default function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,6 +42,24 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
         if (!data.ok) {
           throw new Error(data.mensaje);
+        }
+
+        const tipo = data.usuario.tipo_persona_id;
+
+        const noPermitida =
+          (pathname.startsWith("/doctor") && tipo !== 2) ||
+          (pathname.startsWith("/secretaria") && tipo !== 3);
+
+        if (noPermitida) {
+          console.log("Está en ruta no permitida");
+          const destino =
+            tipo === 2
+              ? "/doctor/dashboard"
+              : tipo === 3
+              ? "/secretaria/dashboard"
+              : "/login";
+          router.push(destino);
+          return;
         }
 
         setLoading(false);

@@ -2,13 +2,10 @@ import { conectar, sql } from "../database/db.js";
 import { evaluateError } from "../auth/evaluateError.js";
 
 export const AddPacienteController = async (req, res) => {
-  let pool;
   try {
     const { nombre, apellido, documento, obra_social } = req.body; //Estos van en el JSON del Postman. REINICIAR NODE SERVER ANTES
-    pool = await conectar();
-    if (!pool) {
-      throw new Error("No se pudo establecer la conexión a la base de datos.");
-    }
+    const pool = await conectar();
+
     let resultado = await pool
       .request()
       .input("Nombre", sql.VarChar, nombre)
@@ -20,22 +17,20 @@ export const AddPacienteController = async (req, res) => {
     console.log(resultado);
     return res.status(201).send(resultado.output.PacienteId);
   } catch (error) {
-    console.error(error);
-    return res.status(500).send({ message: "Ocurrió un error inesperado." });
-  } finally {
-    if (pool) {
-      pool.close();
-    }
+    console.error("Error al conectar o ejecutar:", error);
+
+    const mensaje = evaluateError(error);
+
+    res.status(500).json({
+      mensaje,
+      error: error.message,
+    });
   }
 };
 export const SearchPacienteByDocumentController = async (req, res) => {
-  let pool;
   try {
     const { documento } = req.query; //Estos van en el JSON del Postman. REINICIAR NODE SERVER ANTES
-    pool = await conectar();
-    if (!pool) {
-      throw new Error("No se pudo establecer la conexión a la base de datos.");
-    }
+    const pool = await conectar();
     let resultado = await pool
       .request()
       .input("Documento", sql.VarChar, documento)
@@ -47,11 +42,13 @@ export const SearchPacienteByDocumentController = async (req, res) => {
     console.log(resultado);
     return res.status(200).send(respuesta);
   } catch (error) {
-    console.error(error);
-    return res.status(500).send({ message: "Ocurrió un error inesperado." });
-  } finally {
-    if (pool) {
-      pool.close();
-    }
+    console.error("Error al conectar o ejecutar:", error);
+
+    const mensaje = evaluateError(error);
+
+    res.status(500).json({
+      mensaje,
+      error: error.message,
+    });
   }
 };

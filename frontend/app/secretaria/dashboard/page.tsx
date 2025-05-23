@@ -18,7 +18,7 @@ export default function DashboardSecretaria() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div>
             <h1 className="text-2xl font-bold">
-              Bienvenido {usuario?.nombre}{" "}
+              Bienvenido/a {usuario?.nombre}{" "}
             </h1>
             <p className="text-sm text-gray-500">
               Gestiona turnos y registros de pacientes

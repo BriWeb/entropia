@@ -5,23 +5,6 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 dayjs.extend(utc);
 
-/*export const GetTurnosController = async (req, res) => {
-  try {
-    const pool = await conectar();
-    let resultado = await pool.request().query("SELECT * FROM GetTurnos");
-    resultado = resultado.recordset;
-
-    if (resultado.length === 0) {
-      return res.status(404).json({ mensaje: "No se encontraron turnos." });
-    }
-
-    return res.status(200).send(resultado);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send(error);
-  }  
-};*/
-
 const applyFilters = (filters, pool) => {
   const {
     id,
@@ -97,9 +80,7 @@ const applyFilters = (filters, pool) => {
 export const GetTurnosController = async (req, res) => {
   try {
     const pool = await conectar();
-    if (!pool) {
-      throw new Error("No se pudo establecer la conexión a la base de datos.");
-    }
+
     let { limit, offset } = req.query;
     limit = parseInt(limit);
     offset = parseInt(offset);
@@ -152,20 +133,23 @@ export const GetTurnosController = async (req, res) => {
 
     return res.status(200).send(respuesta);
   } catch (error) {
-    console.error(error);
-    return res.status(500).send(error);
+    console.error("Error al conectar o ejecutar:", error);
+
+    const mensaje = evaluateError(error);
+
+    res.status(500).json({
+      mensaje,
+      error: error.message,
+    });
   }
 };
 
 export const AddTurnoController = async (req, res) => {
-  let pool;
   try {
     const { horario_id, fecha, paciente_id, medico_id, recepcion_id } =
       req.body; //Estos van en el JSON del Postman. REINICIAR NODE SERVER ANTES
-    pool = await conectar();
-    if (!pool) {
-      throw new Error("No se pudo establecer la conexión a la base de datos.");
-    }
+    const pool = await conectar();
+
     let resultado = await pool
       .request()
       .input("Horario_id", sql.Int, horario_id)
@@ -178,23 +162,22 @@ export const AddTurnoController = async (req, res) => {
     console.log(resultado);
     return res.status(201).send(resultado.output.Id);
   } catch (error) {
-    console.error(error);
-    return res.status(500).send({ message: "Ocurrió un error inesperado." });
-  } finally {
-    if (pool) {
-      pool.close();
-    }
+    console.error("Error al conectar o ejecutar:", error);
+
+    const mensaje = evaluateError(error);
+
+    res.status(500).json({
+      mensaje,
+      error: error.message,
+    });
   }
 };
 
 export const GetAvailableTurnos = async (req, res) => {
-  let pool;
   try {
     const { especialista_en_id, fecha_final } = req.query; //Estos van en el JSON del Postman. REINICIAR NODE SERVER ANTES
-    pool = await conectar();
-    if (!pool) {
-      throw new Error("No se pudo establecer la conexión a la base de datos.");
-    }
+    const pool = await conectar();
+
     let resultado = await pool
       .request()
       .input("Especialista", sql.Int, especialista_en_id)
@@ -209,11 +192,13 @@ export const GetAvailableTurnos = async (req, res) => {
 
     return res.status(200).send(respuesta);
   } catch (error) {
-    console.error(error);
-    return res.status(500).send({ message: "Ocurrió un error inesperado." });
-  } finally {
-    if (pool) {
-      pool.close();
-    }
+    console.error("Error al conectar o ejecutar:", error);
+
+    const mensaje = evaluateError(error);
+
+    res.status(500).json({
+      mensaje,
+      error: error.message,
+    });
   }
 };

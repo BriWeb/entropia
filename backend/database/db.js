@@ -20,9 +20,11 @@ const dbConfig = {
   },
 };
 
+let pool;
 async function conectar() {
+  if (pool) return pool; // Ya existe
   try {
-    const pool = await sql.connect(dbConfig);
+    pool = await sql.connect(dbConfig);
     console.log("Conectado a SQL Server");
     return pool;
   } catch (err) {
