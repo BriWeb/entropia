@@ -58,7 +58,7 @@ export default function DashboardSecretaria() {
           </Card>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="bg-secondary p-6 rounded-lg shadow-md">
           <h3 className="text-lg font-bold">Buscar Paciente</h3>
           <div>
             <div className="flex flex-col gap-4 mb-4">
@@ -87,7 +87,7 @@ export default function DashboardSecretaria() {
                 Especialidad
               </label>
               <select
-                className="w-full border border-gray-300 rounded-md p-2 bg-white"
+                className="w-full border border-gray-300 rounded-md p-2 bg-secondary"
                 name="especialidad"
                 id="especialidad"
               >
@@ -101,7 +101,7 @@ export default function DashboardSecretaria() {
                 Fecha
               </label>
               <select
-                className="w-full border border-gray-300 rounded-md p-2 bg-white"
+                className="w-full border border-gray-300 rounded-md p-2 bg-secondary"
                 name="fecha"
                 id="fecha"
               >
@@ -114,7 +114,7 @@ export default function DashboardSecretaria() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
             <div>
-              <div className="p-6 h-[400px] flex flex-col bg-white rounded-lg shadow-md">
+              <div className="p-6 h-[400px] flex flex-col bg-secondary rounded-lg shadow-md">
                 <div className="flex flex-row items-center gap-4 mb-2">
                   <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
                     <UserCircle size={24} className="text-gray-500" />
@@ -131,55 +131,55 @@ export default function DashboardSecretaria() {
                   <div className="grid grid-cols-2 gap-2 overflow-y-auto max-h-[280px] pr-2">
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       9:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       9:30
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       10:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       10:30
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       11:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       11:30
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       12:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       12:30
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       13:00
                     </Button>
@@ -188,7 +188,7 @@ export default function DashboardSecretaria() {
               </div>
             </div>
             <div>
-              <div className="p-6 h-[400px] flex flex-col bg-white rounded-lg shadow-md">
+              <div className="p-6 h-[400px] flex flex-col bg-secondary rounded-lg shadow-md">
                 <div className="flex flex-row items-center gap-4 mb-2">
                   <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
                     <UserCircle size={24} className="text-gray-500" />
@@ -205,49 +205,49 @@ export default function DashboardSecretaria() {
                   <div className="grid grid-cols-2 gap-2 overflow-y-auto max-h-[280px] pr-2">
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       8:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       8:30
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       9:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       9:30
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       14:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       14:30
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       15:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       15:30
                     </Button>
@@ -256,7 +256,7 @@ export default function DashboardSecretaria() {
               </div>
             </div>
             <div>
-              <div className="p-6 h-[400px] flex flex-col bg-white rounded-lg shadow-md">
+              <div className="p-6 h-[400px] flex flex-col bg-secondary rounded-lg shadow-md">
                 <div className="flex flex-row items-center gap-4 mb-2">
                   <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
                     <UserCircle size={24} className="text-gray-500" />
@@ -273,43 +273,43 @@ export default function DashboardSecretaria() {
                   <div className="grid grid-cols-2 gap-2  overflow-y-auto max-h-[280px] pr-2">
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       10:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       10:30
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       11:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       11:30
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       16:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       16:30
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       17:00
                     </Button>
@@ -318,7 +318,7 @@ export default function DashboardSecretaria() {
               </div>
             </div>
             <div>
-              <div className="p-6 h-[400px] flex flex-col bg-white rounded-lg shadow-md">
+              <div className="p-6 h-[400px] flex flex-col bg-secondary rounded-lg shadow-md">
                 <div className="flex flex-row items-center gap-4 mb-2">
                   <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
                     <UserCircle size={24} className="text-gray-500" />
@@ -335,49 +335,49 @@ export default function DashboardSecretaria() {
                   <div className="grid grid-cols-2 gap-2 overflow-y-auto max-h-[280px] pr-2">
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       9:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       9:30
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       12:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       12:30
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       13:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       13:30
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       14:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       14:30
                     </Button>
@@ -386,7 +386,7 @@ export default function DashboardSecretaria() {
               </div>
             </div>
             <div>
-              <div className="p-6 h-[400px] flex flex-col bg-white rounded-lg shadow-md">
+              <div className="p-6 h-[400px] flex flex-col bg-secondary rounded-lg shadow-md">
                 <div className="flex flex-row items-center gap-4 mb-2">
                   <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
                     <UserCircle size={24} className="text-gray-500" />
@@ -403,49 +403,49 @@ export default function DashboardSecretaria() {
                   <div className="grid grid-cols-2 gap-2 overflow-y-auto max-h-[280px] pr-2">
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       8:30
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       9:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       9:30
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       15:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       15:30
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       16:00
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       16:30
                     </Button>
                     <Button
                       variant="outline"
-                      className="bg-white hover:bg-gray-100"
+                      className="bg-secondary hover:bg-gray-100"
                     >
                       17:00
                     </Button>

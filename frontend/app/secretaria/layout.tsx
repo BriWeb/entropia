@@ -108,7 +108,7 @@ export default function SecretariaLayout({
             
             {/* Contenido principal */}
             <div className="flex-1 flex flex-col w-full md:ml-64">
-                <div className="bg-white shadow-sm sticky top-0 z-40">
+                <div className="bg-secondary shadow-sm sticky top-0 z-40">
                     <div className="flex items-center">
                         {isClient && isMobile && (
                             <button 

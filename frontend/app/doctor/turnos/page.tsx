@@ -32,7 +32,7 @@ export default function TurnosDoctor() {
             </div>
 
             {/* filtros y acciones */}
-            <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+            <div className="bg-secondary rounded-lg shadow-md p-4 mb-6">
                 <div className="flex flex-col sm:flex-row gap-4 items-center justify-between mb-4">
                     <div className="relative flex-1 w-full">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -45,11 +45,11 @@ export default function TurnosDoctor() {
                         />
                     </div>
                     <div className="flex gap-2">
-                        <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50">
+                        <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-secondary text-primary-700 hover:bg-gray-50">
                             <Calendar className="h-4 w-4" />
                             <span>Fecha</span>
                         </button>
-                        <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50">
+                        <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-secondary text-primary-700 hover:bg-gray-50">
                             <Clock className="h-4 w-4" />
                             <span>Horario</span>
                         </button>
@@ -63,7 +63,7 @@ export default function TurnosDoctor() {
             </div>
 
             {/* Tabla de turnos */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-secondary rounded-lg shadow-md overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
@@ -88,7 +88,7 @@ export default function TurnosDoctor() {
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                        <tbody className="bg-secondary divide-y divide-gray-200">
                             {turnos.map((turno) => (
                                 <tr key={turno.id} className="hover:bg-gray-50">
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -124,11 +124,11 @@ export default function TurnosDoctor() {
             </div>
 
             {/* Paginas del final */}
-            <div className="bg-white border-t border-gray-200 px-4 py-3 sm:px-6 mt-4 rounded-lg shadow-md">
+            <div className="bg-secondary border-t border-gray-200 px-4 py-3 sm:px-6 mt-4 rounded-lg shadow-md">
                 <div className="flex items-center justify-between">
                     <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                         <div>
-                            <p className="text-sm text-gray-700">
+                            <p className="text-sm text-primary-700">
                                 Mostrando <span className="font-medium">1</span> a <span className="font-medium">8</span> de <span className="font-medium">8</span> resultados
                             </p>
                         </div>
@@ -136,7 +136,7 @@ export default function TurnosDoctor() {
                             <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
                                 <a
                                     href="#"
-                                    className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                                    className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-secondary text-sm font-medium text-gray-500 hover:bg-gray-50"
                                 >
                                     <span className="sr-only">Anterior</span>
                                     <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -152,7 +152,7 @@ export default function TurnosDoctor() {
                                 </a>
                                 <a
                                     href="#"
-                                    className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                                    className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-secondary text-sm font-medium text-gray-500 hover:bg-gray-50"
                                 >
                                     <span className="sr-only">Siguiente</span>
                                     <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

@@ -143,7 +143,7 @@ export default function LoginPage() {
                   Recuérdame
                 </label>
               </div>
-              <a href="#" className="text-sm text-gray-700 hover:underline">
+              <a href="#" className="text-sm text-primary-700 hover:underline">
                 ¿Olvidó su contraseña?
               </a>
             </div>

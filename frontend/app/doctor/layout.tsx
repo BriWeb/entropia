@@ -49,6 +49,7 @@ export default function DoctorLayout({
                                 md:translate-x-0 w-64 bg-white shadow-lg transition-all duration-300 
                                 fixed md:fixed top-0 left-0 h-screen z-50 overflow-y-auto pt-14`}>
                     <div className="h-full flex flex-col bg-white">
+
                         {/* titulo del dashboard y boton para cerrar en celulares */}
                         <div className="flex justify-between items-center p-4 border-b">
                             {isMobile && (
@@ -103,7 +104,7 @@ export default function DoctorLayout({
             {/* esta es la parte derecha donde va el contenido principal */}
             <div className="flex-1 flex flex-col w-full md:ml-64">
                 {/* menu de hamburguesa en celulares */}
-                <div className="bg-white shadow-sm sticky top-0 z-40">
+                <div className="bg-secondary shadow-sm sticky top-0 z-40">
                     <div className="flex items-center">
                         {isClient && isMobile && (
                             <button 
