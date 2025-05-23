@@ -42,9 +42,9 @@ export default function SecretariaLayout({
             {/* Sidebar */}
             {isClient && (
                 <aside className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
-                                md:translate-x-0 w-64 bg-white shadow-lg transition-all duration-300 
+                                md:translate-x-0 w-64 bg-secondary shadow-lg transition-all duration-300 
                                 fixed md:fixed top-0 left-0 h-screen z-50 overflow-y-auto`}>
-                    <div className="h-full flex flex-col bg-white">
+                    <div className="h-full flex flex-col bg-secondary">
                         <div className="flex justify-between items-center p-4 border-b">
                             <h1 className="text-xl font-bold">Dashboard</h1>
                             {isMobile && (
@@ -101,7 +101,7 @@ export default function SecretariaLayout({
             
             {/* Contenido principal */}
             <div className="flex-1 flex flex-col w-full md:ml-64">
-                <div className="bg-white shadow-sm sticky top-0 z-40">
+                <div className="bg-secondary shadow-sm sticky top-0 z-40">
                     <div className="flex items-center">
                         {isClient && isMobile && (
                             <button 

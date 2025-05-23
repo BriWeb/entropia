@@ -29,7 +29,7 @@ export default function AgendaPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Calendario */}
-                <div className="lg:col-span-2 bg-white rounded-lg shadow-md p-6">
+                <div className="lg:col-span-2 bg-secondary rounded-lg shadow-md p-6">
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-xl font-semibold capitalize">{currentMonth} {currentYear}</h2>
                         <div className="flex gap-2">
@@ -90,7 +90,7 @@ export default function AgendaPage() {
                 </div>
 
                 {/* Próximos turnos */}
-                <div className="bg-white rounded-lg shadow-md p-6">
+                <div className="bg-secondary rounded-lg shadow-md p-6">
                     <h2 className="text-xl font-semibold mb-4">Próximos turnos</h2>
                     <div className="space-y-4">
                         {events.slice(0, 3).map((event, index) => (
@@ -109,7 +109,7 @@ export default function AgendaPage() {
             </div>
 
             {/* acciones rapida, añadir nuevo turno */}
-            <div className="mt-6 bg-white rounded-lg shadow-md p-6">
+            <div className="mt-6 bg-secondary rounded-lg shadow-md p-6">
                 <h2 className="text-xl font-semibold mb-4">Acciones rápidas</h2>
                 <div className="flex justify-center">
                     <button className="p-4 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
