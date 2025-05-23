@@ -11,7 +11,7 @@ export default function ConfiguracionPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Panel lateral de navegación */}
                 <div className="md:col-span-1">
-                    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div className="bg-secondary rounded-lg shadow-md overflow-hidden">
                         <div className="p-4 bg-gray-50 border-b">
                             <h2 className="text-lg font-medium">Ajustes</h2>
                         </div>
@@ -20,27 +20,27 @@ export default function ConfiguracionPage() {
                                 <Settings className="h-5 w-5" />
                                 <span>General</span>
                             </a>
-                            <a href="#" className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md mt-1">
+                            <a href="#" className="flex items-center gap-3 px-3 py-2 text-primary-700 hover:bg-gray-50 rounded-md mt-1">
                                 <Bell className="h-5 w-5" />
                                 <span>Notificaciones</span>
                             </a>
-                            <a href="#" className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md mt-1">
+                            <a href="#" className="flex items-center gap-3 px-3 py-2 text-primary-700 hover:bg-gray-50 rounded-md mt-1">
                                 <Shield className="h-5 w-5" />
                                 <span>Seguridad</span>
                             </a>
-                            <a href="#" className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md mt-1">
+                            <a href="#" className="flex items-center gap-3 px-3 py-2 text-primary-700 hover:bg-gray-50 rounded-md mt-1">
                                 <Users className="h-5 w-5" />
                                 <span>Usuarios</span>
                             </a>
-                            <a href="#" className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md mt-1">
+                            <a href="#" className="flex items-center gap-3 px-3 py-2 text-primary-700 hover:bg-gray-50 rounded-md mt-1">
                                 <Clock className="h-5 w-5" />
                                 <span>Horarios</span>
                             </a>
-                            <a href="#" className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md mt-1">
+                            <a href="#" className="flex items-center gap-3 px-3 py-2 text-primary-700 hover:bg-gray-50 rounded-md mt-1">
                                 <Globe className="h-5 w-5" />
                                 <span>Integración</span>
                             </a>
-                            <a href="#" className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md mt-1">
+                            <a href="#" className="flex items-center gap-3 px-3 py-2 text-primary-700 hover:bg-gray-50 rounded-md mt-1">
                                 <HelpCircle className="h-5 w-5" />
                                 <span>Ayuda</span>
                             </a>
@@ -50,7 +50,7 @@ export default function ConfiguracionPage() {
 
                 {/* Contenido principal */}
                 <div className="md:col-span-2">
-                    <div className="bg-white rounded-lg shadow-md p-6">
+                    <div className="bg-secondary rounded-lg shadow-md p-6">
                         <div className="border-b pb-5">
                             <h3 className="text-lg font-medium">Configuración General</h3>
                             <p className="mt-1 text-sm text-gray-500">
@@ -63,7 +63,7 @@ export default function ConfiguracionPage() {
                                 <h4 className="text-sm font-medium text-gray-900">Información de la clínica</h4>
                                 <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-6 gap-x-4">
                                     <div className="sm:col-span-3">
-                                        <label htmlFor="nombre-clinica" className="block text-sm font-medium text-gray-700">
+                                        <label htmlFor="nombre-clinica" className="block text-sm font-medium text-primary-700">
                                             Nombre de la clínica
                                         </label>
                                         <div className="mt-1">
@@ -78,7 +78,7 @@ export default function ConfiguracionPage() {
                                     </div>
 
                                     <div className="sm:col-span-3">
-                                        <label htmlFor="telefono" className="block text-sm font-medium text-gray-700">
+                                        <label htmlFor="telefono" className="block text-sm font-medium text-primary-700">
                                             Teléfono
                                         </label>
                                         <div className="mt-1">
@@ -93,7 +93,7 @@ export default function ConfiguracionPage() {
                                     </div>
 
                                     <div className="sm:col-span-6">
-                                        <label htmlFor="direccion" className="block text-sm font-medium text-gray-700">
+                                        <label htmlFor="direccion" className="block text-sm font-medium text-primary-700">
                                             Dirección
                                         </label>
                                         <div className="mt-1">
@@ -108,7 +108,7 @@ export default function ConfiguracionPage() {
                                     </div>
 
                                     <div className="sm:col-span-6">
-                                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                                        <label htmlFor="email" className="block text-sm font-medium text-primary-700">
                                             Email de contacto
                                         </label>
                                         <div className="mt-1">
@@ -128,7 +128,7 @@ export default function ConfiguracionPage() {
                                 <div className="flex justify-end">
                                     <button
                                         type="button"
-                                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                                        className="px-4 py-2 text-sm font-medium text-primary-700 bg-secondary border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                                     >
                                         Cancelar
                                     </button>
@@ -153,7 +153,7 @@ export default function ConfiguracionPage() {
                             </div>
                             <div className="ml-3">
                                 <h3 className="text-sm font-medium text-gray-800">Información importante</h3>
-                                <div className="mt-2 text-sm text-gray-700">
+                                <div className="mt-2 text-sm text-primary-700">
                                     <p>
                                         Esta es la sección de configuración del sistema. Aquí podrás personalizar la apariencia, 
                                         configurar notificaciones, gestionar usuarios y más. Navega por las diferentes opciones 

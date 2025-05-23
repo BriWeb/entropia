@@ -60,7 +60,7 @@ export default function TurnosPage() {
       </div>
 
       {/* Filtros y acciones */}
-      <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+      <div className="bg-secondary rounded-lg shadow-md p-4 mb-6">
         <div className="flex flex-col sm:flex-row gap-4 items-center justify-between mb-4">
           <div className="relative flex-1 w-full">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -73,11 +73,11 @@ export default function TurnosPage() {
             />
           </div>
           <div className="flex gap-2">
-            <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50">
+            <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-secondary text-primary-700 hover:bg-gray-50">
               <Filter className="h-4 w-4" />
               <span>Filtrar</span>
             </button>
-            <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50">
+            <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-secondary text-primary-700 hover:bg-gray-50">
               <Calendar className="h-4 w-4" />
               <span>Fecha</span>
             </button>
@@ -101,7 +101,7 @@ export default function TurnosPage() {
       {/* Tabla de turnos */}
       {data && data.count && (
         <>
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="bg-secondary rounded-lg shadow-md overflow-hidden">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -150,7 +150,7 @@ export default function TurnosPage() {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-secondary divide-y divide-gray-200">
                   {data.rows.map((turno) => (
                     <tr key={turno.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -193,11 +193,11 @@ export default function TurnosPage() {
           </div>
 
           {/* Paginación */}
-          <div className="bg-white border-t border-gray-200 px-4 py-3 sm:px-6 mt-4 rounded-lg shadow-md">
+          <div className="bg-secondary border-t border-gray-200 px-4 py-3 sm:px-6 mt-4 rounded-lg shadow-md">
             <div className="flex items-center justify-between">
               <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                 <div>
-                  <p className="text-sm text-gray-700">
+                  <p className="text-sm text-primary-700">
                     Mostrando <span className="font-medium">{offset + 1}</span>{" "}
                     a{" "}
                     <span className="font-medium">
@@ -217,7 +217,7 @@ export default function TurnosPage() {
                         setOffset((prev) => Math.max(prev - limit, 0))
                       }
                       disabled={offset === 0}
-                      className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-secondary text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <span className="sr-only">Anterior</span>
                       <svg
@@ -252,7 +252,7 @@ export default function TurnosPage() {
                         )
                       }
                       disabled={offset + limit >= data.count}
-                      className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-secondary text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <span className="sr-only">Siguiente</span>
                       <svg

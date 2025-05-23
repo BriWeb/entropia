@@ -1,7 +1,12 @@
+"use client";
+
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function DashboardDoctor() {
+
+    const { usuario } = useAuth();
     // turnos de ejemplo, despues se agrega de la base de datos
     const turnosHoy = [
         { id: 1, hora: '09:00', paciente: 'Juan Pérez', estado: 'Pendiente', notas: 'Control mensual' },
@@ -34,7 +39,7 @@ export default function DashboardDoctor() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 
                 <div>
-                    <h1 className="text-2xl font-bold">Bienvenido Dr. Carlos Rodríguez</h1>
+                    <h1 className="text-2xl font-bold">Bienvenido {usuario?.nombre}</h1>
                     <p className="text-sm text-gray-500">Panel de gestión de turnos y pacientes</p>
                 </div>
 
@@ -75,7 +80,7 @@ export default function DashboardDoctor() {
                 </div>
 
                 {/* Acá está la tabla con los turnos de hoy */}
-                <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div className="bg-secondary rounded-lg shadow-md p-6 mb-6">
                     <h2 className="text-lg font-bold mb-4">Turnos de Hoy</h2>
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200">
@@ -100,7 +105,7 @@ export default function DashboardDoctor() {
                                 </tr>
                             </thead>
                             {/* Acá mapeo todos los turnos y los muestro en filas */}
-                            <tbody className="bg-white divide-y divide-gray-200">
+                            <tbody className="bg-secondary divide-y divide-gray-200">
                                 {turnosHoy.map((turno) => (
                                     <tr key={turno.id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -136,7 +141,7 @@ export default function DashboardDoctor() {
                 </div>
 
                 {/* Acá está la tabla con los turnos programados para próximos días */}
-                <div className="bg-white rounded-lg shadow-md p-6">
+                <div className="bg-secondary rounded-lg shadow-md p-6">
                     <h2 className="text-lg font-bold mb-4">Próximos Turnos</h2>
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200">
@@ -159,7 +164,7 @@ export default function DashboardDoctor() {
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
+                            <tbody className="bg-secondary divide-y divide-gray-200">
                                 {proximosTurnos.map((turno) => (
                                     <tr key={turno.id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">

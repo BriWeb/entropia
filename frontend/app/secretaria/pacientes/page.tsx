@@ -30,7 +30,7 @@ export default function PacientesPage() {
             </div>
 
             {/* Filtros y acciones */}
-            <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+            <div className="bg-secondary rounded-lg shadow-md p-4 mb-6">
                 <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
                     <div className="relative flex-1 w-full">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -43,7 +43,7 @@ export default function PacientesPage() {
                         />
                     </div>
                     <div className="flex gap-2">
-                        <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50">
+                        <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-secondary text-primary-700 hover:bg-gray-50">
                             <Filter className="h-4 w-4" />
                             <span>Filtrar</span>
                         </button>
@@ -58,7 +58,7 @@ export default function PacientesPage() {
             {/* Lista de pacientes y documentos */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Lista de pacientes */}
-                <div className="lg:col-span-1 bg-white rounded-lg shadow-md overflow-hidden">
+                <div className="lg:col-span-1 bg-secondary rounded-lg shadow-md overflow-hidden">
                     <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
                         <h2 className="text-lg font-medium text-gray-900">Pacientes</h2>
                     </div>
@@ -92,7 +92,7 @@ export default function PacientesPage() {
                 {/* Información del paciente y documentos */}
                 <div className="lg:col-span-2 space-y-6">
                     {/* Información del paciente */}
-                    <div className="bg-white rounded-lg shadow-md p-6">
+                    <div className="bg-secondary rounded-lg shadow-md p-6">
                         <div className="flex items-start justify-between">
                             <div className="flex items-center space-x-5">
                                 <div className="flex-shrink-0">
@@ -106,10 +106,10 @@ export default function PacientesPage() {
                                 </div>
                             </div>
                             <div className="flex space-x-2">
-                                <button className="inline-flex items-center px-3 py-1.5 border border-gray-300 rounded-md bg-white text-gray-700 text-sm hover:bg-gray-50">
+                                <button className="inline-flex items-center px-3 py-1.5 border border-gray-300 rounded-md bg-secondary text-primary-700 text-sm hover:bg-gray-50">
                                     Editar
                                 </button>
-                                <button className="inline-flex items-center px-3 py-1.5 border border-gray-300 rounded-md bg-gray-100 text-gray-700 text-sm hover:bg-gray-200">
+                                <button className="inline-flex items-center px-3 py-1.5 border border-gray-300 rounded-md bg-gray-100 text-primary-700 text-sm hover:bg-gray-200">
                                     Historial
                                 </button>
                             </div>
@@ -160,7 +160,7 @@ export default function PacientesPage() {
                     </div>
 
                     {/* Documentos del paciente */}
-                    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div className="bg-secondary rounded-lg shadow-md overflow-hidden">
                         <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
                             <h2 className="text-lg font-medium text-gray-900">Documentos</h2>
                             <button className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-800 rounded-md text-sm hover:bg-gray-200">
@@ -186,7 +186,7 @@ export default function PacientesPage() {
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                                <tbody className="bg-secondary divide-y divide-gray-200">
                                     {documentos.filter(doc => doc.pacienteId === 1).map((doc) => (
                                         <tr key={doc.id} className="hover:bg-gray-50">
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
