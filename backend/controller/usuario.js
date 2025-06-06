@@ -1,9 +1,9 @@
 import { conectar, sql } from "../database/db.js";
-import { evaluateError } from "../auth/evaluateError.js";
+import { evaluateError } from "../helpers/evaluateError.js";
 
 import jwt from "jsonwebtoken";
 import { config } from "dotenv";
-import { validateUser } from "../auth/validateUser.js";
+import { validateUser } from "../helpers/validateUser.js";
 config();
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY;

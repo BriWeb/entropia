@@ -1,5 +1,5 @@
 import { conectar, sql } from "../database/db.js";
-import { evaluateError } from "../auth/evaluateError.js";
+import { evaluateError } from "../helpers/evaluateError.js";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
@@ -38,7 +38,7 @@ const applyFilters = (filters, pool) => {
     request.input("horario_id", sql.Int, horario_id);
   }
   if (fecha) {
-    condiciones.push("fecha = @fecha");
+    condiciones.push("fecha = @fecha"); // Debe ser en formato "yyyy-mm-dd";
     request.input("fecha", sql.Date, fecha);
   }
   if (fecha_minima) {
@@ -90,7 +90,9 @@ export const GetTurnosController = async (req, res) => {
 
     // ----------------
     // PARA EL COUNT
-    let { condiciones, request } = applyFilters(req.query, pool);
+    let filters = req.query;
+    filters.fecha = req.fechaToday ? req.fechaToday : filters.fecha;
+    let { condiciones, request } = applyFilters(filters, pool);
     let consulta = "SELECT * FROM GetTurnos";
     // Si hay condiciones se unen con "AND" y se agregan a la consulta
     if (condiciones.length > 0) {
@@ -106,7 +108,7 @@ export const GetTurnosController = async (req, res) => {
     El anterior request (del count) queda cerrado y no puede reutilizarse, por lo que
     creamos uno nuevo y volvemos a agregar los inputs
     */
-    const { request: dataRequest } = applyFilters(req.query, pool);
+    const { request: dataRequest } = applyFilters(filters, pool);
 
     dataRequest.input("limit", sql.Int, limit);
     dataRequest.input("offset", sql.Int, offset);

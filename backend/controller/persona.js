@@ -1,5 +1,5 @@
 import { conectar, sql } from "../database/db.js";
-import { evaluateError } from "../auth/evaluateError.js";
+import { evaluateError } from "../helpers/evaluateError.js";
 
 export const GetPersonaController = async (req, res) => {
   try {
