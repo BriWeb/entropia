@@ -665,6 +665,54 @@ end;
 go;
 
 
+--select * from GetTurnos;
+
+-- bajar la fecha un día
+--UPDATE turno.turno
+--SET fecha = DATEADD(DAY, -1, fecha);
+
+-- subir la fecha un día
+--UPDATE turno.turno
+--SET fecha = DATEADD(DAY, 1, fecha);
+-----------------------------------------------------------------------------
+
+
+--drop procedure AvailableTurnosByDoctor
+create or alter procedure AvailableTurnosByDoctor
+@Medico_id INT = NULL
+as
+begin
+
+	WITH HorariosAsignados AS (
+		SELECT horario, fecha, medico_id
+		FROM GetTurnos
+	),
+	HorariosDisponibles AS (
+		SELECT 
+			ho.horario, 
+			CAST(GETDATE() AS DATE) AS fecha, 
+			m.id
+		FROM turno.horario ho
+		CROSS JOIN persona.medico m
+		WHERE NOT EXISTS (
+			SELECT 1
+			FROM HorariosAsignados ha
+			WHERE 
+				ha.horario = ho.horario 
+				AND ha.fecha = CAST(GETDATE() AS DATE)
+				AND ha.medico_id = m.id
+		)
+		--AND ho.horario >= CAST(GETDATE() AS TIME)
+		AND (@Medico_id IS NULL OR m.id = @Medico_id)
+	)
+	SELECT id AS medico_id, horario, fecha
+	FROM HorariosDisponibles
+	ORDER BY id, horario, fecha
+	OPTION (MAXRECURSION 100);
+end;
+go;
+--EXEC AvailableTurnosByDoctor 2
+
 --EXEC SearchPacienteByDocumento '42.678.35';
 
 --INSERTANDO DATOS PARA PROBAR
