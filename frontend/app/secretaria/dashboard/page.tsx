@@ -8,35 +8,77 @@ import AuthGuard from "@/components/auth/AuthGuard";
 import { useFetch } from "@/hooks/useFetch";
 // Traemos el contexto donde se guarda el usuario
 import { useAuth } from "@/app/context/AuthContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Loading from "@/components/ui/loading";
 import Error from "@/components/ui/error";
 
 export default function DashboardSecretaria() {
   // extraemos el usuario
   const { usuario } = useAuth();
+  const [horarioId, setHorarioId] = useState<number | null>(null);
+  const [especialidadId, setEspecialidadId] = useState<number | null>(null);
 
   interface Turno {
     especialidad: string;
     nombre: string;
     apellido: string;
-    horario: string; // formato "HH:mm"
+    horario: string;
   }
 
   interface HorariosPorProfesional {
     [id: string]: Turno[];
   }
 
-  const { loading, data, error } = useFetch<HorariosPorProfesional>({
-    url: `${process.env.NEXT_PUBLIC_API_URL}/medico/today`,
-    requiredAuth: true, // indica que debe incluir a el usuario actual en los encabezados para autorizar
+  const queryParams = new URLSearchParams();
+
+  if (horarioId) queryParams.append("horario_id", horarioId.toString());
+  if (especialidadId)
+    queryParams.append("especialidad_id", especialidadId.toString());
+
+  const {
+    loading: loadingToday,
+    data: dataToday,
+    error: errorToday,
+  } = useFetch<HorariosPorProfesional>({
+    url: `${
+      process.env.NEXT_PUBLIC_API_URL
+    }/medico/today?${queryParams.toString()}`,
+    requiredAuth: true,
+  });
+
+  interface Especialidad {
+    id: number;
+    descripcion: string;
+  }
+
+  const {
+    loading: loadingEspecialidades,
+    data: dataEspecialidades,
+    error: errorEspecialidades,
+  } = useFetch<Especialidad[]>({
+    url: `${process.env.NEXT_PUBLIC_API_URL}/medico/especialidades`,
+    requiredAuth: true,
+  });
+
+  interface Horarios {
+    id: number;
+    horario: string;
+  }
+
+  const {
+    loading: loadingHorarios,
+    data: dataHorarios,
+    error: errorHorarios,
+  } = useFetch<Horarios[]>({
+    url: `${process.env.NEXT_PUBLIC_API_URL}/turno/horarios`,
+    requiredAuth: true,
   });
 
   useEffect(() => {
-    if (data) {
-      console.log("Turnos obtenidos: ", data);
+    if (dataHorarios) {
+      console.log("Horarios obtenidos: ", dataHorarios);
     }
-  }, [data]);
+  }, [dataHorarios]);
 
   return (
     <AuthGuard>
@@ -116,38 +158,64 @@ export default function DashboardSecretaria() {
                 <label className="text-md  text-gray-500" htmlFor="nombre">
                   Especialidad
                 </label>
+                {loadingEspecialidades && <Loading />}
+                {errorEspecialidades && <Error error={errorEspecialidades} />}
                 <select
                   className="w-full border border-gray-300 rounded-md p-2 bg-secondary"
                   name="especialidad"
                   id="especialidad"
+                  onChange={(e) => {
+                    const selected = parseInt(e.target.value);
+                    setEspecialidadId(isNaN(selected) ? null : selected);
+                  }}
                 >
-                  <option value="1">Especialidad 1</option>
-                  <option value="2">Especialidad 2</option>
-                  <option value="3">Especialidad 3</option>
+                  <option value="">Todos</option>{" "}
+                  {/* Opción para limpiar filtro */}
+                  {dataEspecialidades &&
+                    dataEspecialidades.map((e) => {
+                      return (
+                        <option value={e.id} key={e.id}>
+                          {e.descripcion}
+                        </option>
+                      );
+                    })}
                 </select>
               </div>
               <div className="w-full  rounded-md ">
-                <label className="text-md  text-gray-500" htmlFor="fecha">
-                  Fecha
+                <label className="text-md  text-gray-500" htmlFor="horario">
+                  Horario
                 </label>
+                {loadingHorarios && <Loading />}
+                {errorHorarios && <Error error={errorHorarios} />}
                 <select
                   className="w-full border border-gray-300 rounded-md p-2 bg-secondary"
-                  name="fecha"
-                  id="fecha"
+                  name="horario"
+                  id="horario"
+                  onChange={(e) => {
+                    const selected = parseInt(e.target.value);
+                    setHorarioId(isNaN(selected) ? null : selected);
+                  }}
                 >
-                  <option value="1">Fecha 1</option>
-                  <option value="2">Fecha 2</option>
-                  <option value="3">Fecha 3</option>
+                  <option value="">Todos</option>{" "}
+                  {/* Opción para limpiar filtro */}
+                  {dataHorarios &&
+                    dataHorarios.map((e) => {
+                      return (
+                        <option value={e.id} key={e.id}>
+                          {e.horario}
+                        </option>
+                      );
+                    })}
                 </select>
               </div>
             </div>
 
-            {loading && <Loading />}
-            {error && <Error error={error} />}
+            {loadingToday && <Loading />}
+            {errorToday && <Error error={errorToday} />}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
-              {data &&
-                Object.entries(data).map(([id, turnos]) => {
+              {dataToday &&
+                Object.entries(dataToday).map(([id, turnos]) => {
                   const medico = turnos[0];
                   return (
                     <div

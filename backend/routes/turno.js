@@ -3,6 +3,7 @@ import {
   GetTurnosController,
   AddTurnoController,
   GetAvailableTurnos,
+  GetHorarioController,
 } from "../controller/turno.js";
 import { verifyToken } from "../middlewares/verifyToken.js";
 import { verifyRole } from "../middlewares/verifyRole.js";
@@ -20,5 +21,6 @@ router.get(
 );
 router.post("/turno/add", verifyToken, verifyRole(3), AddTurnoController);
 router.get("/turno/available", verifyToken, verifyRole(3), GetAvailableTurnos);
+router.get("/turno/horarios", verifyToken, verifyRole(3), GetHorarioController);
 
 export default router;

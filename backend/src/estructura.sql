@@ -573,6 +573,10 @@ begin
 end;
 go;
 
+--DECLARE @TurnoId INT;
+--EXEC AddTurno 17, '2025-06-27', 11, 6, 1, @TurnoId OUTPUT;
+--SELECT @TurnoId AS Id;
+
 
 --drop view GetTurnos
 create or alter view GetTurnos as --✔️
@@ -614,7 +618,7 @@ on tu.recepcion_id = rec.id
 join persona.persona as per_3
 on rec.persona_id = per_3.id;
 go;
-
+--select * from GetTurnos;
 
 --drop procedure AvailableTurnos
 create or alter procedure AvailableTurnos
@@ -665,26 +669,36 @@ end;
 go;
 
 
---select * from GetTurnos;
-
 -- bajar la fecha un día
 --UPDATE turno.turno
 --SET fecha = DATEADD(DAY, -1, fecha);
 
 -- subir la fecha un día
 --UPDATE turno.turno
---SET fecha = DATEADD(DAY, 1, fecha);
+--SET fecha = DATEADD(DAY, 20, fecha);
+
+-- bajar la fecha un día para los que tienen la fecha mayor a la actual
+--UPDATE turno.turno
+--SET fecha = DATEADD(DAY, -1, fecha)
+--WHERE fecha > CONVERT(date, GETDATE());
+
+-- poner todos los registros a la fecha actual
+--UPDATE turno.turno 
+--SET fecha = CONVERT(date, GETDATE());
+
 -----------------------------------------------------------------------------
 
-
+select * from turno.horario
 --drop procedure AvailableTurnosByDoctor
 create or alter procedure AvailableTurnosByDoctor
-@Medico_id INT = NULL
+@Medico_id INT = NULL,
+@Especialidad_id INT = NULL,
+@Horario_id INT = NULL
 as
 begin
 
 	WITH HorariosAsignados AS (
-		SELECT horario, fecha, medico_id
+		SELECT horario, fecha, medico_id, especialista_en_id
 		FROM GetTurnos
 	),
 	HorariosDisponibles AS (
@@ -704,6 +718,8 @@ begin
 		)
 		--AND ho.horario >= CAST(GETDATE() AS TIME)
 		AND (@Medico_id IS NULL OR m.id = @Medico_id)
+		AND (@Especialidad_id IS NULL OR m.especialidad_id = @Especialidad_id)
+		AND (@Horario_id IS NULL OR ho.id = @Horario_id)
 	)
 	SELECT hor.id AS medico_id, esp.descripcion as especialidad, per.nombre, per.apellido, hor.horario, hor.fecha
 	FROM HorariosDisponibles as hor
@@ -717,14 +733,12 @@ begin
 	OPTION (MAXRECURSION 100);
 end;
 go;
---EXEC AvailableTurnosByDoctor 2 --209 --19
-select med.id, esp.descripcion, per.nombre, per.apellido from persona.medico as med
-join persona.persona as per
-on per.id = med.persona_id
-join persona.especialidad as esp
-on esp.id = med.especialidad_id
+--EXEC AvailableTurnosByDoctor @Medico_id = 3 --209 --19
+--EXEC AvailableTurnosByDoctor @Especialidad_id = 2;
+--EXEC AvailableTurnosByDoctor @Horario_id = 3;
 
-select * from persona.persona
+
+
 --EXEC SearchPacienteByDocumento '42.678.35';
 
 --INSERTANDO DATOS PARA PROBAR
@@ -823,11 +837,6 @@ select * from persona.persona
 --SELECT horario FROM Horarios
 --OPTION (MAXRECURSION 0);
 
-
---STORE PARA AGREGAR TURNOS
---DECLARE @TurnoId INT;
---EXEC AddTurno 1, '04/04/2025', 1, 2, 1, @TurnoId OUTPUT;
---SELECT @TurnoId AS Id;
 
 
 --INSERT INTO turno.turno (horario_id, fecha, paciente_id, medico_id, recepcion_id)

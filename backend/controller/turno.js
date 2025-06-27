@@ -1,5 +1,6 @@
 import { conectar, sql } from "../database/db.js";
 import { evaluateError } from "../helpers/evaluateError.js";
+import { formatTime } from "../helpers/formatTime.js";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
@@ -193,6 +194,35 @@ export const GetAvailableTurnos = async (req, res) => {
     }));
 
     return res.status(200).send(respuesta);
+  } catch (error) {
+    console.error("Error al conectar o ejecutar:", error);
+
+    const mensaje = evaluateError(error);
+
+    res.status(500).json({
+      mensaje,
+      error: error.message,
+    });
+  }
+};
+
+export const GetHorarioController = async (req, res) => {
+  try {
+    const pool = await conectar();
+
+    const result = await pool.request().query("select * from turno.horario");
+
+    let horarios = [];
+    result.recordset.forEach((e) => {
+      let registro = {
+        id: e.id,
+        horario: formatTime(e),
+      };
+
+      horarios.push(registro);
+    });
+
+    return res.status(201).send(horarios);
   } catch (error) {
     console.error("Error al conectar o ejecutar:", error);
 
