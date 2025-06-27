@@ -4,7 +4,7 @@ import AuthGuard from "@/components/auth/AuthGuard";
 export default function ConfiguracionDoctor() {
   return (
     <AuthGuard>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="h-full bg-background mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="mb-6">
           <h1 className="text-2xl font-bold mb-2">Configuración</h1>
           <p className="text-gray-500">Personaliza tu horario de consultas</p>
@@ -13,10 +13,10 @@ export default function ConfiguracionDoctor() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-1">
             <div className="bg-secondary rounded-lg shadow-md overflow-hidden">
-              <div className="p-4 bg-gray-50 border-b">
-                <h2 className="text-lg font-medium">Ajustes</h2>
+              <div className="p-4 bg-primary border-b">
+                <h2 className="text-lg font-medium text-secondary">Ajustes</h2>
               </div>
-              <nav className="p-2">
+              <nav className="p-2 bg-card">
                 <a
                   href="#"
                   className="flex items-center gap-3 px-3 py-2 text-gray-800 bg-gray-100 rounded-md"
@@ -26,14 +26,14 @@ export default function ConfiguracionDoctor() {
                 </a>
                 <a
                   href="#"
-                  className="flex items-center gap-3 px-3 py-2 text-primary-700 hover:bg-gray-50 rounded-md mt-1"
+                  className="flex items-center gap-3 px-3 py-2 text-primary-700 hover:bg-accent hover:text-primary rounded-md mt-1"
                 >
                   <Clock className="h-5 w-5" />
                   <span>Horarios de consulta</span>
                 </a>
                 <a
                   href="#"
-                  className="flex items-center gap-3 px-3 py-2 text-primary-700 hover:bg-gray-50 rounded-md mt-1"
+                  className="flex items-center gap-3 px-3 py-2 text-primary-700 hover:bg-accent hover:text-primary rounded-md mt-1"
                 >
                   <HelpCircle className="h-5 w-5" />
                   <span>Ayuda</span>
@@ -53,7 +53,7 @@ export default function ConfiguracionDoctor() {
 
               <div className="py-5 space-y-6">
                 <div>
-                  <h4 className="text-sm font-medium text-gray-900">
+                  <h4 className="text-sm font-medium">
                     Días de consulta
                   </h4>
                   <div className="mt-4">
@@ -160,7 +160,7 @@ export default function ConfiguracionDoctor() {
                   <div className="flex justify-end">
                     <button
                       type="button"
-                      className="px-4 py-2 text-sm font-medium text-primary-700 bg-secondary border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                      className="px-4 py-2 text-sm font-medium text-primary bg-secondary border border-gray-300 rounded-md shadow-sm hover:bg-background focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                     >
                       Cancelar
                     </button>
@@ -175,7 +175,7 @@ export default function ConfiguracionDoctor() {
               </div>
             </div>
 
-            <div className="mt-6 bg-gray-100 border border-gray-200 rounded-lg p-6">
+            <div className="mt-6 bg-secondary border border-gray-200 rounded-lg p-6">
               <div className="flex">
                 <div className="flex-shrink-0">
                   <svg
@@ -194,10 +194,10 @@ export default function ConfiguracionDoctor() {
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-gray-800">
+                  <h3 className="text-sm font-medium">
                     Información importante
                   </h3>
-                  <div className="mt-2 text-sm text-primary-700">
+                  <div className="mt-2 text-sm">
                     <p>
                       Los días seleccionados son los que aparecerán disponibles
                       para que los pacientes reserven turnos. Asegúrese de
