@@ -48,9 +48,14 @@ export const GetAvailableTodayController = async (req, res) => {
         horarios[e.medico_id] = [];
       }
 
-      const horaFormateada = formatTime(e);
+      let registro = {
+        especialidad: e.especialidad,
+        nombre: e.nombre,
+        apellido: e.apellido,
+        horario: formatTime(e),
+      };
 
-      horarios[e.medico_id].push(horaFormateada);
+      horarios[e.medico_id].push(registro);
     });
 
     return res.status(201).send(horarios);
