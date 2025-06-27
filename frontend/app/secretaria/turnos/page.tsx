@@ -55,7 +55,7 @@ export default function TurnosPage() {
 
   return (
     <AuthGuard>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="bg-secondary mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="mb-6">
           <h1 className="text-2xl font-bold mb-2">Turnos</h1>
           <p className="text-gray-500">
@@ -64,7 +64,7 @@ export default function TurnosPage() {
         </div>
 
         {/* Filtros y acciones */}
-        <div className="bg-secondary rounded-lg shadow-md p-4 mb-6">
+        <div className="bg-card rounded-lg shadow-md p-4 mb-6">
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-between mb-4">
             <div className="relative flex-1 w-full">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -108,68 +108,68 @@ export default function TurnosPage() {
             <div className="bg-secondary rounded-lg shadow-md overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
+                  <thead className="bg-background">
                     <tr>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
                       >
                         Fecha
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
                       >
                         Hora
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
                       >
                         Paciente
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
                       >
                         Doctor
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
                       >
                         Especialidad
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
                       >
                         Estado
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider"
                       >
                         Acciones
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-secondary divide-y divide-gray-200">
+                  <tbody className="bg-card divide-y divide-gray-200">
                     {data.rows.map((turno) => (
-                      <tr key={turno.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <tr key={turno.id} className="hover:bg-accent">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
                           {turno.fecha}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
                           {turno.horario}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           {`${turno.nombre_paciente}  ${turno.apellido_paciente}`}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
                           {`${turno.nombre_medico}  ${turno.apellido_medico}`}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
                           {turno.especialista_en}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -182,10 +182,10 @@ export default function TurnosPage() {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <button className="text-gray-600 hover:text-gray-900 mr-4">
+                          <button className="text-secondary bg-primary p-2 mr-4 rounded-xl border-solid border-2 border-accent hover:border-foreground">
                             Editar
                           </button>
-                          <button className="text-gray-600 hover:text-gray-900">
+                          <button className="text-secondary bg-primary p-2 rounded-xl border-solid border-2 border-accent hover:border-foreground">
                             Cancelar
                           </button>
                         </td>

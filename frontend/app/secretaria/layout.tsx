@@ -59,10 +59,10 @@ export default function SecretariaLayout({
             className={`${
               isSidebarOpen ? "translate-x-0" : "-translate-x-full"
             } 
-                                md:translate-x-0 w-64 bg-white shadow-lg transition-all duration-300 
+                                md:translate-x-0 w-64 bg-secondary shadow-lg transition-all duration-300 
                                 fixed md:fixed top-0 left-0 h-screen z-50 overflow-y-auto pt-14`}
           >
-            <div className="h-full flex flex-col bg-white">
+            <div className="h-full flex flex-col bg-secondary">
               <div className="flex justify-between items-center p-4 border-b">
                 {isMobile && (
                   <button onClick={toggleSidebar} className="md:hidden">
@@ -72,46 +72,46 @@ export default function SecretariaLayout({
               </div>
 
               {/* Menú Principal */}
-              <div className="flex-1 p-4">
+              <div className="flex-1 p-4 bg-sidebar">
                 <nav className="space-y-2">
                   <Link
                     href="/secretaria/dashboard"
-                    className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg"
+                    className="flex items-center gap-2 p-2 hover:text-accent hover:bg-primary rounded-lg"
                   >
                     <LayoutDashboard size={20} />
                     <span>Panel</span>
                   </Link>
                   <Link
                     href="/secretaria/perfil"
-                    className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg"
+                    className="flex items-center gap-2 p-2 hover:text-accent hover:bg-primary rounded-lg"
                   >
                     <UserCircle size={20} />
                     <span>Perfil</span>
                   </Link>
                   <Link
                     href="/secretaria/agenda"
-                    className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg"
+                    className="flex items-center gap-2 p-2 hover:text-accent hover:bg-primary rounded-lg"
                   >
                     <Calendar size={20} />
                     <span>Agenda</span>
                   </Link>
                   <Link
                     href="/secretaria/turnos"
-                    className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg"
+                    className="flex items-center gap-2 p-2 hover:text-accent hover:bg-primary rounded-lg"
                   >
                     <Clock size={20} />
                     <span>Turnos</span>
                   </Link>
                   <Link
                     href="/secretaria/pacientes"
-                    className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg"
+                    className="flex items-center gap-2 p-2 hover:text-accent hover:bg-primary rounded-lg"
                   >
                     <Users size={20} />
                     <span>Pacientes</span>
                   </Link>
                   <Link
                     href="/secretaria/configuracion"
-                    className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg"
+                    className="flex items-center gap-2 p-2 hover:text-accent hover:bg-primary rounded-lg"
                   >
                     <Settings size={20} />
                     <span>Configuración</span>
@@ -120,7 +120,7 @@ export default function SecretariaLayout({
               </div>
 
               {/* Perfil y Logout */}
-              <div className="p-4 border-t">
+              <div className="p-4 border-t bg-secondary">
                 <div className="mb-4">
                   <div className="flex items-center gap-2">
                     <UserCircle
@@ -156,7 +156,7 @@ export default function SecretariaLayout({
               <NavBar />
             </div>
           </div>
-          <main className="p-4 bg-gray-100 flex-1 transition-all duration-300 relative">
+          <main className="bg-gray-100 flex-1 transition-all duration-300 relative">
             {isClient && isMobile && isSidebarOpen && (
               <div
                 className="absolute inset-0 bg-gray-600 opacity-75 z-30"

@@ -12,8 +12,8 @@ export default function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,_rgba(0,0,0,0.02)_0%,_transparent_100%)] dark:bg-[radial-gradient(circle_at_30%_30%,_rgba(255,255,255,0.02)_0%,_transparent_100%)]"></div>
       </div>
 
-      <main className="h-screen flex items-center px-4">
-        <div className="max-w-6xl mx-auto">
+      <main className="h-screen flex items-center px-4 bg-white dark:bg-black">
+        <div className="max-w-6xl mx-auto ">
           {/* Header Section */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-black dark:text-white">

@@ -38,7 +38,7 @@ export default function AgendaPage() {
 
   return (
     <AuthGuard>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="h-full bg-secondary p-8 sm:px-6 lg:px-8 py-6">
         <div className="mb-6">
           <h1 className="text-2xl font-bold mb-2">Agenda</h1>
           <p className="text-gray-500">
@@ -48,7 +48,7 @@ export default function AgendaPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Calendario */}
-          <div className="lg:col-span-2 bg-secondary rounded-lg shadow-md p-6">
+          <div className="lg:col-span-2 bg-card rounded-lg shadow-md p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold capitalize">
                 {currentMonth} {currentYear}
@@ -144,7 +144,7 @@ export default function AgendaPage() {
           </div>
 
           {/* Próximos turnos */}
-          <div className="bg-secondary rounded-lg shadow-md p-6">
+          <div className="bg-card rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold mb-4">Próximos turnos</h2>
             <div className="space-y-4">
               {events.slice(0, 3).map((event, index) => (
@@ -161,7 +161,7 @@ export default function AgendaPage() {
                   </p>
                 </div>
               ))}
-              <button className="w-full py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 transition-colors">
+              <button className="w-full py-2 bg-input rounded-md hover:text-secondary hover:bg-gray-200 transition-colors">
                 Ver todos los turnos
               </button>
             </div>
@@ -169,10 +169,10 @@ export default function AgendaPage() {
         </div>
 
         {/* acciones rapida, añadir nuevo turno */}
-        <div className="mt-6 bg-secondary rounded-lg shadow-md p-6">
+        <div className="mt-6 bg-card rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold mb-4">Acciones rápidas</h2>
           <div className="flex justify-center">
-            <button className="p-4 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+            <button className="p-4 bg-input rounded-md hover:text-secondary hover:bg-primary transition-colors flex items-center justify-center gap-2">
               <Calendar size={20} />
               <span>Añadir nuevo turno</span>
             </button>

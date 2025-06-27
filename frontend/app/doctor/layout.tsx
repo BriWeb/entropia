@@ -107,7 +107,7 @@ export default function DoctorLayout({
               </div>
 
               {/* aca esta el nombre del doctor y el boton para salir */}
-              <div className="p-4 border-t">
+              <div className="p-4 border-t bg-secondary">
                 <div className="mb-4">
                   <div className="flex items-center gap-2">
                     <UserCircle

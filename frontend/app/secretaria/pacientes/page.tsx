@@ -121,7 +121,7 @@ export default function PacientesPage() {
 
   return (
     <AuthGuard>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="h-full mx-auto bg-secondary px-4 sm:px-6 lg:px-8 py-6">
         <div className="mb-6">
           <h1 className="text-2xl font-bold mb-2">Pacientes</h1>
           <p className="text-gray-500">
@@ -158,15 +158,15 @@ export default function PacientesPage() {
         {/* Lista de pacientes y documentos */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Lista de pacientes */}
-          <div className="lg:col-span-1 bg-secondary rounded-lg shadow-md overflow-hidden">
-            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900">Pacientes</h2>
+          <div className="lg:col-span-1 bg-card rounded-lg shadow-md overflow-hidden">
+            <div className="px-4 py-3 bg-card border-b border-gray-200">
+              <h2 className="text-lg font-medium text-primary">Pacientes</h2>
             </div>
             <div className="divide-y divide-gray-200 max-h-[600px] overflow-auto">
               {pacientes.map((paciente) => (
                 <div
                   key={paciente.id}
-                  className="p-4 hover:bg-gray-50 cursor-pointer"
+                  className="p-4 hover:bg-accent cursor-pointer"
                 >
                   <div className="flex items-center space-x-4">
                     <div className="flex-shrink-0">
@@ -175,18 +175,18 @@ export default function PacientesPage() {
                       </div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">
+                      <p className="text-sm font-medium truncate">
                         {paciente.nombre}
                       </p>
-                      <p className="text-sm text-gray-500 truncate">
+                      <p className="text-sm truncate">
                         DNI: {paciente.documento}
                       </p>
                     </div>
                     <div className="flex-shrink-0 flex space-x-2">
-                      <button className="p-1 rounded-full text-gray-400 hover:text-gray-500">
+                      <button className="p-1 rounded-full text-gray-400 hover:text-primary">
                         <Phone className="h-4 w-4" />
                       </button>
-                      <button className="p-1 rounded-full text-gray-400 hover:text-gray-500">
+                      <button className="p-1 rounded-full text-gray-400 hover:text-primary">
                         <Mail className="h-4 w-4" />
                       </button>
                     </div>
@@ -208,10 +208,10 @@ export default function PacientesPage() {
                     </div>
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900">
+                    <h2 className="text-xl font-bold">
                       Juan Pérez
                     </h2>
-                    <p className="text-sm text-gray-500">DNI: 12345678</p>
+                    <p className="text-sm">DNI: 12345678</p>
                   </div>
                 </div>
                 <div className="flex space-x-2">
@@ -229,7 +229,7 @@ export default function PacientesPage() {
                   <h3 className="text-sm font-medium text-gray-500">
                     Información personal
                   </h3>
-                  <dl className="mt-2 text-sm text-gray-900">
+                  <dl className="mt-2 text-sm">
                     <div className="mt-1">
                       <dt className="inline text-gray-500">
                         Fecha de nacimiento:
@@ -250,7 +250,7 @@ export default function PacientesPage() {
                   <h3 className="text-sm font-medium text-gray-500">
                     Contacto
                   </h3>
-                  <dl className="mt-2 text-sm text-gray-900">
+                  <dl className="mt-2 text-sm">
                     <div className="mt-1 flex items-center">
                       <dt className="sr-only">Teléfono</dt>
                       <Phone className="h-4 w-4 text-gray-400 mr-2" />
@@ -291,8 +291,8 @@ export default function PacientesPage() {
 
             {/* Documentos del paciente */}
             <div className="bg-secondary rounded-lg shadow-md overflow-hidden">
-              <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
-                <h2 className="text-lg font-medium text-gray-900">
+              <div className="px-4 py-3 bg-card border-b border-gray-200 flex justify-between items-center">
+                <h2 className="text-lg font-medium">
                   Documentos
                 </h2>
                 <button className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-800 rounded-md text-sm hover:bg-gray-200">
@@ -302,29 +302,29 @@ export default function PacientesPage() {
               </div>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
+                  <thead className="bg-primary">
                     <tr>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider"
                       >
                         Tipo
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider"
                       >
                         Fecha
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider"
                       >
                         Estado
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-6 py-3 text-right text-xs font-medium text-secondary uppercase tracking-wider"
                       >
                         Acciones
                       </th>
@@ -334,8 +334,8 @@ export default function PacientesPage() {
                     {documentos
                       .filter((doc) => doc.pacienteId === 1)
                       .map((doc) => (
-                        <tr key={doc.id} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <tr key={doc.id}>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             {doc.tipo}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -345,7 +345,7 @@ export default function PacientesPage() {
                             <span
                               className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                                 doc.estado === "Completo"
-                                  ? "bg-gray-100 text-gray-800"
+                                  ? "bg-primary text-secondary"
                                   : doc.estado === "Pendiente"
                                   ? "bg-gray-200 text-gray-800"
                                   : "bg-gray-300 text-gray-800"
@@ -355,10 +355,10 @@ export default function PacientesPage() {
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button className="text-gray-600 hover:text-gray-900 mr-3">
+                            <button className="text-gray-600 hover:text-primary mr-3">
                               Ver
                             </button>
-                            <button className="text-gray-600 hover:text-gray-900">
+                            <button className="text-gray-600 hover:text-primary">
                               Descargar
                             </button>
                           </td>
