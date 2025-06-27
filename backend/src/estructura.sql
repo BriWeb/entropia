@@ -705,14 +705,26 @@ begin
 		--AND ho.horario >= CAST(GETDATE() AS TIME)
 		AND (@Medico_id IS NULL OR m.id = @Medico_id)
 	)
-	SELECT id AS medico_id, horario, fecha
-	FROM HorariosDisponibles
-	ORDER BY id, horario, fecha
+	SELECT hor.id AS medico_id, esp.descripcion as especialidad, per.nombre, per.apellido, hor.horario, hor.fecha
+	FROM HorariosDisponibles as hor
+	join persona.medico as med
+	on med.id = hor.id
+	join persona.persona as per
+	on per.id = med.persona_id
+	join persona.especialidad as esp
+	on esp.id = med.especialidad_id
+	ORDER BY hor.id, hor.horario, hor.fecha
 	OPTION (MAXRECURSION 100);
 end;
 go;
---EXEC AvailableTurnosByDoctor 2
+--EXEC AvailableTurnosByDoctor 2 --209 --19
+select med.id, esp.descripcion, per.nombre, per.apellido from persona.medico as med
+join persona.persona as per
+on per.id = med.persona_id
+join persona.especialidad as esp
+on esp.id = med.especialidad_id
 
+select * from persona.persona
 --EXEC SearchPacienteByDocumento '42.678.35';
 
 --INSERTANDO DATOS PARA PROBAR
