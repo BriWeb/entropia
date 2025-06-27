@@ -89,8 +89,8 @@ export default function DashboardDoctor() {
 
   return (
     <AuthGuard>
-      <div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <>
+        <div className="h-full p-8 sm:px-6 lg:px-8 bg-secondary">
           <div>
             <h1 className="text-2xl font-bold">Bienvenido {usuario?.nombre}</h1>
             <p className="text-sm text-gray-500">
@@ -135,40 +135,40 @@ export default function DashboardDoctor() {
           </div>
 
           {/* Acá está la tabla con los turnos de hoy */}
-          <div className="bg-secondary rounded-lg shadow-md p-6 mb-6">
+          <div className="bg-card rounded-lg shadow-md p-6 mb-6">
             <h2 className="text-lg font-bold mb-4">Turnos de Hoy</h2>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 {/* Estas son las columnas de la tabla */}
-                <thead className="bg-gray-50">
+                <thead className="bg-foreground">
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider"
                     >
                       Hora
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider"
                     >
                       Paciente
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider"
                     >
                       Notas
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider"
                     >
                       Estado
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider"
                     >
                       Acciones
                     </th>
@@ -177,14 +177,14 @@ export default function DashboardDoctor() {
                 {/* Acá mapeo todos los turnos y los muestro en filas */}
                 <tbody className="bg-secondary divide-y divide-gray-200">
                   {turnosHoy.map((turno) => (
-                    <tr key={turno.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <tr key={turno.id} className="bg-card hover:bg-accent">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm ">
                         {turno.hora}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium ">
                         {turno.paciente}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm ">
                         {turno.notas}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -216,39 +216,39 @@ export default function DashboardDoctor() {
           </div>
 
           {/* Acá está la tabla con los turnos programados para próximos días */}
-          <div className="bg-secondary rounded-lg shadow-md p-6">
+          <div className="bg-card rounded-lg shadow-md p-6">
             <h2 className="text-lg font-bold mb-4">Próximos Turnos</h2>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+                <thead className="bg-foreground">
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider"
                     >
                       Fecha
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider"
                     >
                       Hora
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider"
                     >
                       Paciente
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider"
                     >
                       Notas
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider"
                     >
                       Acciones
                     </th>
@@ -256,17 +256,17 @@ export default function DashboardDoctor() {
                 </thead>
                 <tbody className="bg-secondary divide-y divide-gray-200">
                   {proximosTurnos.map((turno) => (
-                    <tr key={turno.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <tr key={turno.id} className="bg-card hover:bg-accent">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
                         {turno.fecha}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
                         {turno.hora}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         {turno.paciente}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
                         {turno.notas}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -284,7 +284,7 @@ export default function DashboardDoctor() {
             </div>
           </div>
         </div>
-      </div>
+      </>
     </AuthGuard>
   );
 }

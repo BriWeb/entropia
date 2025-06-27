@@ -87,7 +87,7 @@ export default function TurnosDoctor() {
 
   return (
     <AuthGuard>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="h-full bg-secondary mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="mb-6">
           <h1 className="text-2xl font-bold mb-2">Mis Turnos</h1>
           <p className="text-gray-500">
@@ -172,19 +172,19 @@ export default function TurnosDoctor() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-secondary divide-y divide-gray-200">
+              <tbody className="bg-card divide-y divide-gray-200">
                 {turnos.map((turno) => (
-                  <tr key={turno.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <tr key={turno.id} className="hover:bg-accent">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
                       {turno.fecha}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
                       {turno.hora}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       {turno.paciente}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
                       {turno.notas}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">

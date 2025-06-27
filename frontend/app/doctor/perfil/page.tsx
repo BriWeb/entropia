@@ -15,7 +15,7 @@ import AuthGuard from "@/components/auth/AuthGuard";
 export default function PerfilDoctor() {
   return (
     <AuthGuard>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="h-full bg-secondary p-8 sm:px-6 lg:px-8">
         <div>
           <h1 className="text-2xl font-bold">Perfil del médico</h1>
           <p className="text-sm text-gray-500">

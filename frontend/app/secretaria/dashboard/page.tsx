@@ -82,8 +82,8 @@ export default function DashboardSecretaria() {
 
   return (
     <AuthGuard>
-      <div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <>
+        <div className="p-8 sm:px-6 lg:px-8 bg-secondary">
           <div>
             <h1 className="text-2xl font-bold">
               Bienvenido/a {usuario?.nombre}{" "}
@@ -130,7 +130,7 @@ export default function DashboardSecretaria() {
             </Card>
           </div>
 
-          <div className="bg-secondary p-6 rounded-lg shadow-md">
+          <div className="bg-card p-6 rounded-lg shadow-md">
             <h3 className="text-lg font-bold">Buscar Paciente</h3>
             <div>
               <div className="flex flex-col gap-4 mb-4">
@@ -220,7 +220,7 @@ export default function DashboardSecretaria() {
                   return (
                     <div
                       key={id}
-                      className="p-6 flex flex-col bg-secondary rounded-lg shadow-md"
+                      className="p-6 flex flex-col bg-card rounded-lg shadow-md"
                     >
                       <div className="flex flex-row items-center gap-4 mb-2">
                         <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
@@ -255,7 +255,7 @@ export default function DashboardSecretaria() {
             </div>
           </div>
         </div>
-      </div>
+      </>
     </AuthGuard>
   );
 }

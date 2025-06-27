@@ -59,10 +59,10 @@ export default function DoctorLayout({
             className={`${
               isSidebarOpen ? "translate-x-0" : "-translate-x-full"
             } 
-                                md:translate-x-0 w-64 bg-white shadow-lg transition-all duration-300 
+                                md:translate-x-0 w-64 bg-secondary shadow-lg transition-all duration-300 
                                 fixed md:fixed top-0 left-0 h-screen z-50 overflow-y-auto pt-14`}
           >
-            <div className="h-full flex flex-col bg-white">
+            <div className="h-full flex flex-col bg-secondary">
               {/* titulo del dashboard y boton para cerrar en celulares */}
               <div className="flex justify-between items-center p-4 border-b">
                 {isMobile && (
@@ -73,32 +73,32 @@ export default function DoctorLayout({
               </div>
 
               {/* estos son los botones del menu principal */}
-              <div className="flex-1 p-4">
+              <div className="flex-1 p-4 bg-sidebar">
                 <nav className="space-y-2">
                   <Link
                     href="/doctor/dashboard"
-                    className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg"
+                    className="flex items-center gap-2 p-2 hover:text-accent hover:bg-primary rounded-lg"
                   >
                     <LayoutDashboard size={20} />
                     <span>Panel</span>
                   </Link>
                   <Link
                     href="/doctor/perfil"
-                    className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg"
+                    className="flex items-center gap-2 p-2 hover:text-accent hover:bg-primary rounded-lg"
                   >
                     <UserCircle size={20} />
                     <span>Perfil</span>
                   </Link>
                   <Link
                     href="/doctor/turnos"
-                    className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg"
+                    className="flex items-center gap-2 p-2 hover:text-accent hover:bg-primary rounded-lg"
                   >
                     <Calendar size={20} />
                     <span>Mis Turnos</span>
                   </Link>
                   <Link
                     href="/doctor/configuracion"
-                    className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg"
+                    className="flex items-center gap-2 p-2 hover:text-accent hover:bg-primary rounded-lg"
                   >
                     <Settings size={20} />
                     <span>Configuración</span>
@@ -107,7 +107,7 @@ export default function DoctorLayout({
               </div>
 
               {/* aca esta el nombre del doctor y el boton para salir */}
-              <div className="p-4 border-t">
+              <div className="p-4 border-t bg-secondary">
                 <div className="mb-4">
                   <div className="flex items-center gap-2">
                     <UserCircle
@@ -145,7 +145,7 @@ export default function DoctorLayout({
             </div>
           </div>
           {/* aca es donde se muestran las paginas como dashboard, perfil, etc. */}
-          <main className="p-4 bg-gray-100 flex-1 transition-all duration-300 relative">
+          <main className="bg-gray-100 flex-1 transition-all duration-300 relative">
             {/* esto es un fondo oscuro que le da efecto de que se cubre la pantalla */}
             {isClient && isMobile && isSidebarOpen && (
               <div
