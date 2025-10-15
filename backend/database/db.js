@@ -1,6 +1,8 @@
 import { config } from "dotenv";
 import sql from "mssql";
 
+import fs from 'fs';
+
 config();
 
 const dbConfig = {
@@ -17,6 +19,9 @@ const dbConfig = {
   options: {
     encrypt: true, // true en Azure, false en local
     trustServerCertificate: false, // true en local, false en Azure
+    cryptoCredentialsDetails: {
+      ca: fs.readFileSync('./certs/global-bundle.pem')
+    }
   },
 };
 
