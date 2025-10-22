@@ -13,12 +13,13 @@ config();
 const app = express();
 
 let port = process.env.NODE_PORT;
-let host = "127.0.0.1";
+// let host = "127.0.0.1";
+let host = "0.0.0.0";
 
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:3000", // o "*"
+    origin: "*", //o "http://localhost:3000"
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })

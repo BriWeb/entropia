@@ -17,6 +17,9 @@ const dbConfig = {
   options: {
     encrypt: true, // true en Azure, false en local
     trustServerCertificate: false, // true en local, false en Azure
+    cryptoCredentialsDetails: {
+      ca: fs.readFileSync("/etc/ssl/certs/global-bundle.pem"),
+    },
   },
 };
 

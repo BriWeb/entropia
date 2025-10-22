@@ -1,0 +1,5 @@
+ec2
+ssh -i "entropia.pem" ec2-user@34.225.2.137
+
+rds
+sqlcmd -S sqlserver-entropia.cjs28uwky5u3.us-east-1.rds.amazonaws.com -U admin -P entropia
