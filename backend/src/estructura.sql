@@ -1,27 +1,29 @@
-if not exists (select * from sys.databases where name = 'Prueba')
+if not exists (select * from sys.databases where name = 'entropia')
 begin
-	create database prueba
+	create database entropia
 end;
 use entropia;
-go;
+go
 
 
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'persona')
 BEGIN
 	EXEC('CREATE SCHEMA persona');
 END;
+go
 
 --drop table persona.tipo_persona;
-if not exists (select * from sys.tables where name = 'tipo_persona')
+if not exists (select * from sys.tables where name = 'tipo_persona' and schema_id = schema_id('persona'))
 begin
 	create table persona.tipo_persona(
 		id int identity(1,1) primary key,
 		descripcion varchar(25) not null
 	);
 end;
+go
 
 --drop table persona.persona;
-if not exists (select * from sys.tables where name = 'persona')
+if not exists (select * from sys.tables where name = 'persona' and schema_id = schema_id('persona'))
 begin
 	create table persona.persona(
 		id int identity(1,1),
@@ -34,9 +36,10 @@ begin
 		constraint pk_persona primary key (id)
 	);
 end;
+go
 
 --drop table persona.usuario;
-if not exists (select * from sys.tables where name = 'usuario')
+if not exists (select * from sys.tables where name = 'usuario' and schema_id = schema_id('persona'))
 begin 
 	create table persona.usuario(
 		id int identity(1,1),
@@ -49,9 +52,10 @@ begin
 		constraint pk_usuario primary key (id)
 	)
 end;
+go
 
 --drop table persona.recepcion;
-if not exists (select * from sys.tables where name = 'recepcion')
+if not exists (select * from sys.tables where name = 'recepcion' and schema_id = schema_id('persona'))
 begin
 	create table persona.recepcion(
 		id int identity(1,1),
@@ -62,9 +66,10 @@ begin
 		constraint pk_recepcion primary key (id)
 	);
 end;
+go
 
 --drop table persona.paciente;
-if not exists (select * from sys.tables where name = 'paciente')
+if not exists (select * from sys.tables where name = 'paciente' and schema_id = schema_id('persona'))
 begin
 	create table persona.paciente(
 		id int identity(1,1),
@@ -75,9 +80,10 @@ begin
 		constraint pk_paciente primary key (id)
 	);
 end;
+go
 
 --drop table persona.especialidad;
-if not exists (select * from sys.tables where name = 'especialidad')
+if not exists (select * from sys.tables where name = 'especialidad' and schema_id = schema_id('persona'))
 begin
 	create table persona.especialidad(
 		id int identity(1,1),
@@ -85,9 +91,10 @@ begin
 		constraint pk_especialidad primary key (id)
 	);
 end;
+go
 
 --drop table persona.medico;
-if not exists (select * from sys.tables where name = 'medico')
+if not exists (select * from sys.tables where name = 'medico' and schema_id = schema_id('persona'))
 begin
 	create table persona.medico(
 		id int identity(1,1),
@@ -100,14 +107,16 @@ begin
 		constraint pk_medico primary key (id)
 	);
 end;
+go
 
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'turno')
 BEGIN
 	EXEC('CREATE SCHEMA turno');
 END;
+go
 
 --drop table turno.estado;
-if not exists (select * from sys.databases where name = 'estado')
+if not exists (select * from sys.tables where name = 'estado' and schema_id = schema_id('turno'))
 begin
 	create table turno.estado(
 		id int identity(1,1),
@@ -115,19 +124,21 @@ begin
 		constraint pk_estado primary key (id)
 	);
 end
+go
 
 --drop table turno.horario;
-if not exists (select * from sys.databases where name = 'horario')
+if not exists (select * from sys.tables where name = 'horario' and schema_id = schema_id('turno'))
 begin
-create table turno.horario (
-    id int identity(1,1),
-    horario TIME(0) NOT NULL,
-		constraint pk_horario primary key (id)
-);
+	create table turno.horario (
+			id int identity(1,1),
+			horario TIME(0) NOT NULL,
+			constraint pk_horario primary key (id)
+	);
 end;
+go
 
 --drop table turno.turno;
-if not exists (select * from sys.databases where name = 'turno')
+if not exists (select * from sys.tables where name = 'turno' and schema_id = schema_id('turno'))
 begin
 	create table turno.turno(
 		id int identity(1,1),
@@ -152,8 +163,7 @@ begin
 		references persona.recepcion (id)
 	);
 end;
-go;
-
+go
 
 --drop function ValidarUsuario;
 CREATE or alter FUNCTION persona.ValidarUsuario ( --✔️
@@ -173,7 +183,7 @@ BEGIN
 		SET @UsuarioId = 0;
 
 	RETURN @UsuarioId;
-END
+END;
 GO
 --SELECT persona.ValidarUsuario('brherrera', '1234');
 
@@ -281,7 +291,7 @@ BEGIN
 		return;
 	END;
 END;
-go;
+go
 
 
 --drop procedure GetPersonData;
@@ -398,7 +408,7 @@ BEGIN
 		return;
 	END;
 END;
-go;
+go
 
 
 --drop procedure SearchPacienteByDocumento
@@ -435,7 +445,7 @@ begin
 			1 AS codigo_estado;
 	end;
 end;
-go;
+go
 
 
 --drop procedure AddPaciente;
@@ -474,7 +484,7 @@ begin
 
 	SELECT @PacienteId = id FROM @NewPaciente;
 end;
-go;
+go
 
 
 --drop procedure Admin_AddMedico
@@ -512,7 +522,7 @@ begin
 
 	SELECT @medico_id = id FROM @NewMedico;
 end;
-go;
+go
 
 
 --drop procedure Admin_AddRecepcion
@@ -550,7 +560,7 @@ begin
 
 	SELECT @Id = id FROM @NewRecepcion;
 end;
-go;
+go
 
 
 --drop procedure AddTurno
@@ -571,7 +581,7 @@ begin
 
 	SELECT @Id = id FROM @Id_table;
 end;
-go;
+go
 
 --DECLARE @TurnoId INT;
 --EXEC AddTurno 17, '2025-06-27', 11, 6, 1, @TurnoId OUTPUT;
@@ -580,44 +590,44 @@ go;
 
 --drop view GetTurnos
 create or alter view GetTurnos as --✔️
-select 
-	tu.id,
-	es.descripcion as "estado_turno",
-	es.id as "estado_turno_id",
-	tu.horario_id,
-	ho.horario,
-	tu.fecha,
-	med.id as "medico_id",
-	per.nombre as "nombre_medico",
-	per.apellido as "apellido_medico",
-	esp.descripcion as "especialista_en",
-	esp.id as "especialista_en_id",
-	per_2.nombre as "nombre_paciente",
-	per_2.apellido as "apellido_paciente", 
-	pac.obra_social,
-	per_3.nombre as "nombre_recepcion",
-	per_3.apellido as "apellido_recepcion", 
-	rec.legajo
-from turno.turno as tu
-join turno.estado as es
-on tu.estado_id = es.id
-join turno.horario as ho
-on tu.horario_id = ho.id
-join persona.medico as med
-on tu.medico_id = med.id
-join persona.persona as per
-on per.id = med.persona_id
-join persona.especialidad as esp
-on med.especialidad_id = esp.id
-join persona.paciente as pac
-on tu.paciente_id = pac.id
-join persona.persona as per_2
-on pac.persona_id = per_2.id 
-join persona.recepcion as rec
-on tu.recepcion_id = rec.id
-join persona.persona as per_3
-on rec.persona_id = per_3.id;
-go;
+	select 
+		tu.id,
+		es.descripcion as "estado_turno",
+		es.id as "estado_turno_id",
+		tu.horario_id,
+		ho.horario,
+		tu.fecha,
+		med.id as "medico_id",
+		per.nombre as "nombre_medico",
+		per.apellido as "apellido_medico",
+		esp.descripcion as "especialista_en",
+		esp.id as "especialista_en_id",
+		per_2.nombre as "nombre_paciente",
+		per_2.apellido as "apellido_paciente", 
+		pac.obra_social,
+		per_3.nombre as "nombre_recepcion",
+		per_3.apellido as "apellido_recepcion", 
+		rec.legajo
+	from turno.turno as tu
+	join turno.estado as es
+	on tu.estado_id = es.id
+	join turno.horario as ho
+	on tu.horario_id = ho.id
+	join persona.medico as med
+	on tu.medico_id = med.id
+	join persona.persona as per
+	on per.id = med.persona_id
+	join persona.especialidad as esp
+	on med.especialidad_id = esp.id
+	join persona.paciente as pac
+	on tu.paciente_id = pac.id
+	join persona.persona as per_2
+	on pac.persona_id = per_2.id 
+	join persona.recepcion as rec
+	on tu.recepcion_id = rec.id
+	join persona.persona as per_3
+	on rec.persona_id = per_3.id;
+go
 --select * from GetTurnos;
 
 --drop procedure AvailableTurnos
@@ -666,7 +676,7 @@ begin
 	FROM HorariosFiltrados
 	OPTION (MAXRECURSION 0);
 end;
-go;
+go
 
 
 -- bajar la fecha un día
@@ -688,7 +698,7 @@ go;
 
 -----------------------------------------------------------------------------
 
-select * from turno.horario
+--select * from turno.horario
 --drop procedure AvailableTurnosByDoctor
 create or alter procedure AvailableTurnosByDoctor
 @Medico_id INT = NULL,
@@ -732,7 +742,7 @@ begin
 	ORDER BY hor.id, hor.horario, hor.fecha
 	OPTION (MAXRECURSION 100);
 end;
-go;
+go
 --EXEC AvailableTurnosByDoctor @Medico_id = 3 --209 --19
 --EXEC AvailableTurnosByDoctor @Especialidad_id = 2;
 --EXEC AvailableTurnosByDoctor @Horario_id = 3;
@@ -742,20 +752,20 @@ go;
 --EXEC SearchPacienteByDocumento '42.678.35';
 
 --INSERTANDO DATOS PARA PROBAR
---insert into persona.tipo_persona (descripcion) values ('Paciente'), ('Medico'), ('Recepcion');
+insert into persona.tipo_persona (descripcion) values ('Paciente'), ('Medico'), ('Recepcion');
 --select * from persona.tipo_persona;
---insert into turno.estado (descripcion) values ('Asignado'), ('En atencion'), ('Finalizado');
+insert into turno.estado (descripcion) values ('Asignado'), ('En atencion'), ('Finalizado');
 --select * from turno.estado;
---insert into persona.persona (nombre, apellido, documento) values ('Brian', 'Herrera', '37.274.854');
---insert into persona.persona (nombre, apellido, documento, tipo_persona_id) values ('Juan', 'Villalba', '42.678.351', 1), ('Pedro', 'Rosa', '52.566.129', 2), ('Veronica', 'Amado', '35.876.942', 3);
+insert into persona.persona (nombre, apellido, documento) values ('Brian', 'Herrera', '37.274.854');
+insert into persona.persona (nombre, apellido, documento, tipo_persona_id) values ('Juan', 'Villalba', '42.678.351', 1), ('Pedro', 'Rosa', '52.566.129', 2), ('Veronica', 'Amado', '35.876.942', 3);
 --select * from persona.persona;
---insert into persona.usuario (usuario, contrasenia, administrador, persona_id) values ('brherrera', '1234', 0, 1);
+insert into persona.usuario (usuario, contrasenia, administrador, persona_id) values ('brherrera', '1234', 0, 1);
 --select * from persona.usuario;
---insert into persona.especialidad (descripcion) values ('General'), ('Pediatría'), ('Ginecología'), ('Dentista'), ('Dermatología'), ('Cardiología'), ('Psiquiatría'), ('Traumatología');
+insert into persona.especialidad (descripcion) values ('General'), ('Pediatría'), ('Ginecología'), ('Dentista'), ('Dermatología'), ('Cardiología'), ('Psiquiatría'), ('Traumatología');
 --select * from persona.especialidad;
---insert into persona.paciente (obra_social, persona_id) values (1, 2);
---insert into persona.medico (especialidad_id, persona_id) values (4, 3);
---insert into persona.recepcion (legajo, persona_id) values ('13252', 4);
+insert into persona.paciente (obra_social, persona_id) values (1, 2);
+insert into persona.medico (especialidad_id, persona_id) values (4, 3);
+insert into persona.recepcion (legajo, persona_id) values ('13252', 4);
 --select * from persona.paciente;
 --select * from persona.medico;
 --select * from persona.recepcion;
@@ -763,33 +773,33 @@ go;
 
 --STORE PARA OBTENER LA INFORMACIÓN DEL USUARIO QUE SE LOGUEA
 --select * from persona.usuario
---insert into persona.usuario (usuario, contrasenia, persona_id) values ('brherrera', '1234', 1);
+insert into persona.usuario (usuario, contrasenia, persona_id) values ('brherrera', '1234', 1);
 --EXEC GetUserData 'brherrera', '1234';
 
 
 --STORE PARA AGREGAR PACIENTES
---DECLARE @PacienteId INT;
---EXEC AddPaciente 'Pedrito', 'Lopez', '25.444.987', 0, @PacienteId OUTPUT;
---EXEC AddPaciente 'Juan', 'Perez', '25.111.987', 0, @PacienteId OUTPUT;
---EXEC AddPaciente 'Maria', 'Gomez', '30.222.456', 1, @PacienteId OUTPUT;
---EXEC AddPaciente 'Carlos', 'Sanchez', '27.333.789', 0, @PacienteId OUTPUT;
---EXEC AddPaciente 'Laura', 'Diaz', '28.444.123', 1, @PacienteId OUTPUT;
---EXEC AddPaciente 'Francisco', 'Lopez', '29.555.654', 0, @PacienteId OUTPUT;
---EXEC AddPaciente 'Luisa', 'Martinez', '31.666.321', 1, @PacienteId OUTPUT;
---EXEC AddPaciente 'Miguel', 'Fernandez', '32.777.890', 0, @PacienteId OUTPUT;
---EXEC AddPaciente 'Camila', 'Vega', '33.888.432', 1, @PacienteId OUTPUT;
---EXEC AddPaciente 'Javier', 'Ramirez', '34.999.876', 0, @PacienteId OUTPUT;
---EXEC AddPaciente 'Sofia', 'Torres', '35.111.234', 1, @PacienteId OUTPUT;
---EXEC AddPaciente 'Diego', 'Navarro', '36.222.345', 0, @PacienteId OUTPUT;
---EXEC AddPaciente 'Valentina', 'Correa', '37.333.678', 1, @PacienteId OUTPUT;
---EXEC AddPaciente 'Lucas', 'Gutierrez', '38.444.901', 0, @PacienteId OUTPUT;
---EXEC AddPaciente 'Martina', 'Mendez', '39.555.123', 1, @PacienteId OUTPUT;
---EXEC AddPaciente 'Oscar', 'Alvarez', '40.666.543', 0, @PacienteId OUTPUT;
---EXEC AddPaciente 'Ana', 'Suarez', '41.777.876', 1, @PacienteId OUTPUT;
---EXEC AddPaciente 'Roberto', 'Rojas', '42.888.234', 0, @PacienteId OUTPUT;
---EXEC AddPaciente 'Carolina', 'Silva', '43.999.567', 1, @PacienteId OUTPUT;
---EXEC AddPaciente 'Eduardo', 'Morales', '44.111.789', 0, @PacienteId OUTPUT;
---EXEC AddPaciente 'Isabel', 'Castro', '45.222.432', 1, @PacienteId OUTPUT;
+DECLARE @PacienteId INT;
+EXEC AddPaciente 'Pedrito', 'Lopez', '25.444.987', 0, @PacienteId OUTPUT;
+EXEC AddPaciente 'Juan', 'Perez', '25.111.987', 0, @PacienteId OUTPUT;
+EXEC AddPaciente 'Maria', 'Gomez', '30.222.456', 1, @PacienteId OUTPUT;
+EXEC AddPaciente 'Carlos', 'Sanchez', '27.333.789', 0, @PacienteId OUTPUT;
+EXEC AddPaciente 'Laura', 'Diaz', '28.444.123', 1, @PacienteId OUTPUT;
+EXEC AddPaciente 'Francisco', 'Lopez', '29.555.654', 0, @PacienteId OUTPUT;
+EXEC AddPaciente 'Luisa', 'Martinez', '31.666.321', 1, @PacienteId OUTPUT;
+EXEC AddPaciente 'Miguel', 'Fernandez', '32.777.890', 0, @PacienteId OUTPUT;
+EXEC AddPaciente 'Camila', 'Vega', '33.888.432', 1, @PacienteId OUTPUT;
+EXEC AddPaciente 'Javier', 'Ramirez', '34.999.876', 0, @PacienteId OUTPUT;
+EXEC AddPaciente 'Sofia', 'Torres', '35.111.234', 1, @PacienteId OUTPUT;
+EXEC AddPaciente 'Diego', 'Navarro', '36.222.345', 0, @PacienteId OUTPUT;
+EXEC AddPaciente 'Valentina', 'Correa', '37.333.678', 1, @PacienteId OUTPUT;
+EXEC AddPaciente 'Lucas', 'Gutierrez', '38.444.901', 0, @PacienteId OUTPUT;
+EXEC AddPaciente 'Martina', 'Mendez', '39.555.123', 1, @PacienteId OUTPUT;
+EXEC AddPaciente 'Oscar', 'Alvarez', '40.666.543', 0, @PacienteId OUTPUT;
+EXEC AddPaciente 'Ana', 'Suarez', '41.777.876', 1, @PacienteId OUTPUT;
+EXEC AddPaciente 'Roberto', 'Rojas', '42.888.234', 0, @PacienteId OUTPUT;
+EXEC AddPaciente 'Carolina', 'Silva', '43.999.567', 1, @PacienteId OUTPUT;
+EXEC AddPaciente 'Eduardo', 'Morales', '44.111.789', 0, @PacienteId OUTPUT;
+EXEC AddPaciente 'Isabel', 'Castro', '45.222.432', 1, @PacienteId OUTPUT;
 --SELECT @PacienteId AS Id;
 
 
@@ -798,14 +808,14 @@ go;
 
 
 --STORE PARA AGREGAR MÉDICOS
---DECLARE @MedicoId INT;
---EXEC Admin_AddMedico 'Esteban', 'Prado', '45.802.930', 1, @MedicoId OUTPUT;
---EXEC Admin_AddMedico 'José', 'Hernández', '44.702.980', 2, @MedicoId OUTPUT;
---EXEC Admin_AddMedico 'Esteban', 'Prado', '45.802.930', 3, @MedicoId OUTPUT;
---EXEC Admin_AddMedico 'Raúl', 'Benitez', '35.002.801', 5, @MedicoId OUTPUT;
---EXEC Admin_AddMedico 'Jon', 'Jimenez', '55.200.752', 6, @MedicoId OUTPUT;
---EXEC Admin_AddMedico 'Maria', 'Prado', '54.337.933', 7, @MedicoId OUTPUT;
---EXEC Admin_AddMedico 'Sofia', 'Santos', '34.282.390', 8, @MedicoId OUTPUT;
+DECLARE @MedicoId INT;
+EXEC Admin_AddMedico 'Esteban', 'Prado', '45.802.930', 1, @MedicoId OUTPUT;
+EXEC Admin_AddMedico 'José', 'Hernández', '44.702.980', 2, @MedicoId OUTPUT;
+EXEC Admin_AddMedico 'Esteban', 'Prado', '45.802.930', 3, @MedicoId OUTPUT;
+EXEC Admin_AddMedico 'Raúl', 'Benitez', '35.002.801', 5, @MedicoId OUTPUT;
+EXEC Admin_AddMedico 'Jon', 'Jimenez', '55.200.752', 6, @MedicoId OUTPUT;
+EXEC Admin_AddMedico 'Maria', 'Prado', '54.337.933', 7, @MedicoId OUTPUT;
+EXEC Admin_AddMedico 'Sofia', 'Santos', '34.282.390', 8, @MedicoId OUTPUT;
 --SELECT @MedicoId AS Id;
 
 
@@ -814,10 +824,10 @@ go;
 
 
 --STORE PARA AGREGAR RECEPCIONISTAS
---DECLARE @RecepcionId INT;
---EXEC Admin_AddRecepcion 'Laura', 'Monserrat', '35.073.537', '2231', @RecepcionId OUTPUT;
---EXEC Admin_AddRecepcion 'Ana', 'Diaz', '25.071.263', '2232', @RecepcionId OUTPUT;
---EXEC Admin_AddRecepcion 'Carlos', 'Morales', '37.453.168', '2233', @RecepcionId OUTPUT;
+DECLARE @RecepcionId INT;
+EXEC Admin_AddRecepcion 'Laura', 'Monserrat', '35.073.537', '2231', @RecepcionId OUTPUT;
+EXEC Admin_AddRecepcion 'Ana', 'Diaz', '25.071.263', '2232', @RecepcionId OUTPUT;
+EXEC Admin_AddRecepcion 'Carlos', 'Morales', '37.453.168', '2233', @RecepcionId OUTPUT;
 --SELECT @RecepcionId AS Id;
 
 
@@ -826,37 +836,37 @@ go;
 
 
 --AGREGAR HORARIOS
---WITH Horarios AS (
---    SELECT CAST('09:00' AS TIME) AS horario
---    UNION ALL
---    SELECT DATEADD(MINUTE, 30, horario)
---    FROM Horarios
---    WHERE horario < '18:00'
---)
---INSERT INTO turno.horario (horario)
---SELECT horario FROM Horarios
---OPTION (MAXRECURSION 0);
+WITH Horarios AS (
+   SELECT CAST('09:00' AS TIME) AS horario
+   UNION ALL
+   SELECT DATEADD(MINUTE, 30, horario)
+   FROM Horarios
+   WHERE horario < '18:00'
+)
+INSERT INTO turno.horario (horario)
+SELECT horario FROM Horarios
+OPTION (MAXRECURSION 0);
 
 
 
---INSERT INTO turno.turno (horario_id, fecha, paciente_id, medico_id, recepcion_id)
---VALUES 
---(1, '2025-04-08', 1, 2, 1), (2, '2025-04-08', 2, 3, 2), (3, '2025-04-08', 3, 7, 3), 
---(4, '2025-04-09', 4, 5, 4), (5, '2025-04-09', 5, 6, 1), (6, '2025-04-09', 6, 7, 2), 
---(7, '2025-04-09', 7, 8, 3), (8, '2025-04-10', 8, 1, 4), (9, '2025-04-10', 9, 3, 1), 
---(10, '2025-04-10', 10, 2, 2), (11, '2025-04-11', 11, 3, 3), (12, '2025-04-11', 12, 5, 4), 
---(13, '2025-04-11', 13, 5, 1), (14, '2025-04-11', 14, 6, 2), (15, '2025-04-12', 15, 7, 3), 
---(16, '2025-04-12', 16, 8, 4), (17, '2025-04-12', 17, 1, 1), (18, '2025-04-12', 18, 4, 2), 
---(1, '2025-04-13', 19, 2, 3), (2, '2025-04-13', 20, 3, 4), (3, '2025-04-13', 21, 5, 1), 
---(4, '2025-04-13', 22, 5, 2), (5, '2025-04-14', 1, 6, 3), (6, '2025-04-14', 2, 7, 4), 
---(7, '2025-04-14', 3, 8, 1), (8, '2025-04-14', 4, 1, 2), (9, '2025-04-15', 5, 6, 3), 
---(10, '2025-04-15', 6, 2, 4), (11, '2025-04-15', 7, 3, 1), (12, '2025-04-15', 8, 1, 2), 
---(13, '2025-04-16', 9, 5, 3), (14, '2025-04-16', 10, 6, 4), (15, '2025-04-16', 11, 7, 1), 
---(16, '2025-04-16', 12, 8, 2), (17, '2025-04-16', 13, 1, 3), (18, '2025-04-16', 14, 4, 4), 
---(1, '2025-04-17', 15, 2, 1), (2, '2025-04-17', 16, 3, 2), (3, '2025-04-17', 17, 7, 3), 
---(4, '2025-04-17', 18, 5, 4), (5, '2025-04-18', 19, 6, 1), (6, '2025-04-18', 20, 7, 2), 
---(7, '2025-04-18', 21, 8, 3), (8, '2025-04-18', 22, 1, 4), (9, '2025-04-18', 1, 8, 1), 
---(10, '2025-04-19', 2, 2, 2), (11, '2025-04-19', 3, 3, 3);
+INSERT INTO turno.turno (horario_id, fecha, paciente_id, medico_id, recepcion_id)
+VALUES 
+(1, '2025-10-23', 1, 2, 1), (2, '2025-10-23', 2, 3, 2), (3, '2025-10-23', 3, 7, 3), 
+(4, '2025-10-24', 4, 5, 4), (5, '2025-10-24', 5, 6, 1), (6, '2025-10-24', 6, 7, 2), 
+(7, '2025-10-24', 7, 8, 3), (8, '2025-10-24', 8, 1, 4), (9, '2025-10-24', 9, 3, 1), 
+(10, '2025-10-24', 10, 2, 2), (11, '2025-10-26', 11, 3, 3), (12, '2025-10-26', 12, 5, 4), 
+(13, '2025-10-26', 13, 5, 1), (14, '2025-10-26', 14, 6, 2), (15, '2025-10-27', 15, 7, 3), 
+(16, '2025-10-27', 16, 8, 4), (17, '2025-10-27', 17, 1, 1), (18, '2025-10-27', 18, 4, 2), 
+(1, '2025-10-28', 19, 2, 3), (2, '2025-10-28', 20, 3, 4), (3, '2025-10-28', 21, 5, 1), 
+(4, '2025-10-28', 22, 5, 2), (5, '2025-10-29', 1, 6, 3), (6, '2025-10-29', 2, 7, 4), 
+(7, '2025-10-29', 3, 8, 1), (8, '2025-10-29', 4, 1, 2), (9, '2025-10-30', 5, 6, 3), 
+(10, '2025-10-30', 6, 2, 4), (11, '2025-10-30', 7, 3, 1), (12, '2025-10-30', 8, 1, 2), 
+(13, '2025-10-31', 9, 5, 3), (14, '2025-10-31', 10, 6, 4), (15, '2025-10-31', 11, 7, 1), 
+(16, '2025-10-31', 12, 8, 2), (17, '2025-10-31', 13, 1, 3), (18, '2025-10-31', 14, 4, 4), 
+(1, '2025-11-01', 15, 2, 1), (2, '2025-11-01', 16, 3, 2), (3, '2025-11-01', 17, 7, 3), 
+(4, '2025-11-01', 18, 5, 4), (5, '2025-11-02', 19, 6, 1), (6, '2025-11-02', 20, 7, 2), 
+(7, '2025-11-02', 21, 8, 3), (8, '2025-11-02', 22, 1, 4), (9, '2025-11-02', 1, 8, 1), 
+(10, '2025-11-03', 2, 2, 2), (11, '2025-11-03', 3, 3, 3);
 
 
 --VISTA PARA VER TODOS LOS TURNOS
@@ -865,4 +875,4 @@ go;
 
 
 --VISTA PARA VER TODOS LOS TURNOS DISPONIBLES DE UNA ESPECIALIDAD
-EXEC AvailableTurnos 2, '2025-05-17'--'09/04/2025'; --2025-04-08 09:30:00
+--EXEC AvailableTurnos 2, '2025-05-17'--'09/04/2025'; --2025-11-23 09:30:00

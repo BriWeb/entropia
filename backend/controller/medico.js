@@ -32,7 +32,7 @@ export const AddMedicoController = async (req, res) => {
 export const GetAvailableTodayController = async (req, res) => {
   try {
     const { medico_id, especialidad_id, horario_id } = req.query;
-    console.log("Parámetros: ", medico_id, especialidad_id, horario_id);
+    // console.log("Parámetros: ", medico_id, especialidad_id, horario_id);
     const pool = await conectar();
     let request = await pool.request();
 
