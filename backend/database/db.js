@@ -1,8 +1,16 @@
 import { config } from "dotenv";
 import sql from "mssql";
 import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 config();
+
+// convierte la URL a una ruta correcta en Windows/Linux
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const certPath = path.join(__dirname, "global-bundle.pem");
 
 const dbConfig = {
   user: process.env.DB_USER,
@@ -19,7 +27,7 @@ const dbConfig = {
     encrypt: true, // true en Azure, false en local
     trustServerCertificate: false, // true en local, false en Azure
     cryptoCredentialsDetails: {
-      ca: fs.readFileSync("/etc/ssl/certs/global-bundle.pem"),
+      ca: fs.readFileSync(certPath),
     },
   },
 };
