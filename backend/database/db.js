@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 import sql from "mssql";
+import fs from "fs";
 
 config();
 
