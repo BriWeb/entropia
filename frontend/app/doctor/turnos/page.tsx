@@ -1,75 +1,65 @@
+"use client";
+
 import { Search, Calendar, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Turno } from "@/types/turno";
+import { useFetch } from "@/hooks/useFetch";
+import Loading from "@/components/ui/loading";
+import Error from "@/components/ui/error";
+import PaginationButton from "@/components/ui/paginationButton";
+import { useEffect, useState } from "react";
 import AuthGuard from "@/components/auth/AuthGuard";
+import { useFetchCallback } from "@/hooks/useFetchCallback";
 
 export default function TurnosDoctor() {
-  // datos de ejemplo para los turnos, despues se agrega de la base de datos
-  const turnos = [
-    {
-      id: 1,
-      fecha: "15/05/2023",
-      hora: "09:00",
-      paciente: "Juan Pérez",
-      estado: "Pendiente",
-      notas: "Control mensual",
-    },
-    {
-      id: 2,
-      fecha: "15/05/2023",
-      hora: "10:30",
-      paciente: "María García",
-      estado: "Pendiente",
-      notas: "Primera consulta",
-    },
-    {
-      id: 3,
-      fecha: "16/05/2023",
-      hora: "09:15",
-      paciente: "Carlos López",
-      estado: "Pendiente",
-      notas: "Seguimiento post-operatorio",
-    },
-    {
-      id: 4,
-      fecha: "16/05/2023",
-      hora: "11:45",
-      paciente: "Ana Martínez",
-      estado: "Pendiente",
-      notas: "Control de rutina",
-    },
-    {
-      id: 5,
-      fecha: "17/05/2023",
-      hora: "14:30",
-      paciente: "Pedro Ramírez",
-      estado: "Pendiente",
-      notas: "Revisión de estudios",
-    },
-    {
-      id: 6,
-      fecha: "17/05/2023",
-      hora: "16:00",
-      paciente: "Sofía Torres",
-      estado: "Pendiente",
-      notas: "Primera consulta",
-    },
-    {
-      id: 7,
-      fecha: "18/05/2023",
-      hora: "10:00",
-      paciente: "Miguel Díaz",
-      estado: "Pendiente",
-      notas: "Control post-tratamiento",
-    },
-    {
-      id: 8,
-      fecha: "18/05/2023",
-      hora: "12:00",
-      paciente: "Lucía Ortiz",
-      estado: "Pendiente",
-      notas: "Revisión anual",
-    },
-  ];
+  const [offset, setOffset] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 20;
+
+  interface MedicoTurnoResponse {
+    count: number;
+    rows: Turno[];
+  }
+
+  const {
+    loading: loadingTurno,
+    data: dataTurno,
+    error: errorTurno,
+    fetchNow,
+  } = useFetchCallback<MedicoTurnoResponse>();
+
+  interface MedicoResponse {
+    id: number;
+  }
+
+  const usuarioStr = localStorage.getItem("usuario");
+  const { persona_id } = usuarioStr ? JSON.parse(usuarioStr) : null;
+
+  const { data: dataIdMedico } = useFetch<MedicoResponse>({
+    url: `${process.env.NEXT_PUBLIC_API_URL}/medico/id?persona_id=${persona_id}`,
+    requiredAuth: true,
+  });
+
+  useEffect(() => {
+    if (!dataIdMedico?.id) return;
+    const token = localStorage.getItem("myToken");
+    fetchNow({
+      url: `${process.env.NEXT_PUBLIC_API_URL}/turno/medico?limit=${limit}&offset=${offset}&medico_id=${dataIdMedico.id}`,
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }, [dataIdMedico, offset]);
+
+  useEffect(() => {
+    if (dataTurno) {
+      // console.log("Turnos obtenidos: ", dataTurno);
+      setTotalPages(Math.ceil(dataTurno.count / limit));
+      setCurrentPage(Math.floor(offset / limit) + 1);
+    }
+  }, [dataTurno, offset]);
 
   // funcion para obtener color segun el estado
   const getEstadoColor = (estado: string) => {
@@ -122,161 +112,193 @@ export default function TurnosDoctor() {
           <div className="flex flex-col sm:flex-row items-center justify-between">
             <div className="mb-4 sm:mb-0">
               <span className="text-sm text-gray-500">
-                Mostrando {turnos.length} turnos programados
+                Mostrando {dataTurno && dataTurno.count ? dataTurno.count : 0}{" "}
+                turnos programados
               </span>
             </div>
           </div>
         </div>
 
         {/* Tabla de turnos */}
-        <div className="bg-secondary rounded-lg shadow-md overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Fecha
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Hora
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Paciente
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Notas
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Estado
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Acciones
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-card divide-y divide-gray-200">
-                {turnos.map((turno) => (
-                  <tr key={turno.id} className="hover:bg-accent">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      {turno.fecha}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      {turno.hora}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      {turno.paciente}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      {turno.notas}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getEstadoColor(
-                          turno.estado
-                        )}`}
+        {dataTurno && dataTurno.count && (
+          <>
+            <div className="bg-secondary rounded-lg shadow-md overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-background">
+                    <tr>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
                       >
-                        {turno.estado}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-                      <Button variant="outline" size="sm" className="mr-2">
-                        Ver ficha
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        Reprogramar
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Paginas del final */}
-        <div className="bg-secondary border-t border-gray-200 px-4 py-3 sm:px-6 mt-4 rounded-lg shadow-md">
-          <div className="flex items-center justify-between">
-            <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm text-primary-700">
-                  Mostrando <span className="font-medium">1</span> a{" "}
-                  <span className="font-medium">8</span> de{" "}
-                  <span className="font-medium">8</span> resultados
-                </p>
-              </div>
-              <div>
-                <nav
-                  className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
-                  aria-label="Pagination"
-                >
-                  <a
-                    href="#"
-                    className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-secondary text-sm font-medium text-gray-500 hover:bg-gray-50"
-                  >
-                    <span className="sr-only">Anterior</span>
-                    <svg
-                      className="h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </a>
-                  <a
-                    href="#"
-                    aria-current="page"
-                    className="z-10 bg-gray-50 border-gray-500 text-gray-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                  >
-                    1
-                  </a>
-                  <a
-                    href="#"
-                    className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-secondary text-sm font-medium text-gray-500 hover:bg-gray-50"
-                  >
-                    <span className="sr-only">Siguiente</span>
-                    <svg
-                      className="h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </a>
-                </nav>
+                        Fecha
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                      >
+                        Hora
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                      >
+                        Paciente
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                      >
+                        Doctor
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                      >
+                        Especialidad
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                      >
+                        Estado
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider"
+                      >
+                        Acciones
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-card divide-y divide-gray-200">
+                    {dataTurno.rows.map((turno) => (
+                      <tr key={turno.id} className="hover:bg-accent">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          {turno.fecha}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          {turno.horario}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          {`${turno.nombre_paciente}  ${turno.apellido_paciente}`}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          {`${turno.nombre_medico}  ${turno.apellido_medico}`}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          {turno.especialista_en}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span
+                            className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getEstadoColor(
+                              turno.estado_turno
+                            )}`}
+                          >
+                            {turno.estado_turno}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <button className="text-secondary bg-primary p-2 mr-4 rounded-xl border-solid border-2 border-accent hover:border-foreground">
+                            Editar
+                          </button>
+                          <button className="text-secondary bg-primary p-2 rounded-xl border-solid border-2 border-accent hover:border-foreground">
+                            Cancelar
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
-          </div>
-        </div>
+
+            {/* Paginación */}
+            <div className="bg-secondary border-t border-gray-200 px-4 py-3 sm:px-6 mt-4 rounded-lg shadow-md">
+              <div className="flex items-center justify-between">
+                <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-sm text-primary-700">
+                      Mostrando{" "}
+                      <span className="font-medium">{offset + 1}</span> a{" "}
+                      <span className="font-medium">
+                        {Math.min(offset + limit, dataTurno.count)}
+                      </span>{" "}
+                      de <span className="font-medium">{dataTurno.count}</span>{" "}
+                      resultados
+                    </p>
+                  </div>
+                  <div>
+                    <nav
+                      className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                      aria-label="Pagination"
+                    >
+                      <button
+                        onClick={() =>
+                          setOffset((prev) => Math.max(prev - limit, 0))
+                        }
+                        disabled={offset === 0}
+                        className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-secondary text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <span className="sr-only">Anterior</span>
+                        <svg
+                          className="h-5 w-5"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                      {Array.from({ length: totalPages }).map((_, i) => {
+                        const page = i + 1;
+                        return (
+                          <PaginationButton
+                            key={page}
+                            pageNumber={page}
+                            isActive={page === currentPage}
+                            onClick={() => setOffset((page - 1) * limit)}
+                          />
+                        );
+                      })}
+                      <button
+                        onClick={() =>
+                          setOffset((prev) =>
+                            Math.min(prev + limit, (totalPages - 1) * limit)
+                          )
+                        }
+                        disabled={offset + limit >= dataTurno.count}
+                        className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-secondary text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <span className="sr-only">Siguiente</span>
+                        <svg
+                          className="h-5 w-5"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+        {loadingTurno && <Loading />}
+        {errorTurno && <Error error={errorTurno} />}
       </div>
     </AuthGuard>
   );

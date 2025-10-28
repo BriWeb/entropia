@@ -26,3 +26,37 @@ export const AddRecepcionistaController = async (req, res) => {
     });
   }
 };
+
+export const GetRecepcionistaIdController = async (req, res) => {
+  try {
+    const { persona_id } = req.query;
+    const pool = await conectar();
+
+    let resultado = await pool
+      .request()
+      .input("persona_id", sql.Int, persona_id)
+      .query(
+        `select re.id
+      from persona.recepcion as re
+      join persona.persona as pe
+      on pe.id = re.persona_id
+      where re.persona_id = @persona_id`
+      );
+
+    if (resultado.recordset.length === 0) {
+      return res.status(404).json({ mensaje: "Recepcionista no encontrado" });
+    }
+
+    const recepcionistaId = resultado.recordset[0].id;
+    return res.status(200).json({ id: recepcionistaId });
+  } catch (error) {
+    console.error("Error al conectar o ejecutar:", error);
+
+    const mensaje = evaluateError(error);
+
+    res.status(500).json({
+      mensaje,
+      error: error.message,
+    });
+  }
+};

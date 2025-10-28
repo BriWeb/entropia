@@ -422,7 +422,8 @@ begin
 	  SELECT 1
 	  FROM persona.paciente AS pa
 	  JOIN persona.persona AS pe ON pe.id = pa.persona_id
-	  WHERE pe.documento = @Documento
+	  -- WHERE pe.documento = @Documento
+		WHERE pe.documento LIKE @Documento + '%'
 	)
 	begin
 		select 
@@ -436,7 +437,8 @@ begin
 		from persona.paciente as pa
 		join persona.persona as pe
 		on pe.id = pa.persona_id
-		where pe.documento = @Documento;
+		-- where pe.documento = @Documento;
+		WHERE pe.documento LIKE @Documento + '%';
 	end
 	else
 	begin
@@ -731,7 +733,7 @@ begin
 		AND (@Especialidad_id IS NULL OR m.especialidad_id = @Especialidad_id)
 		AND (@Horario_id IS NULL OR ho.id = @Horario_id)
 	)
-	SELECT hor.id AS medico_id, esp.descripcion as especialidad, per.nombre, per.apellido, hor.horario, hor.fecha
+	SELECT hor.id AS medico_id, esp.descripcion as especialidad, esp.id as especialidad_id, per.nombre, per.apellido, hor.horario, hor.fecha
 	FROM HorariosDisponibles as hor
 	join persona.medico as med
 	on med.id = hor.id

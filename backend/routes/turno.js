@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   GetTurnosController,
+  GetTurnosMedicoController,
   AddTurnoController,
   GetAvailableTurnos,
   GetHorarioController,
@@ -11,7 +12,13 @@ import { dateNow } from "../middlewares/dateNow.js";
 
 const router = Router();
 
-router.get("/turno", verifyToken, verifyRole(3), GetTurnosController);
+router.get("/turno", verifyToken, verifyRole(2, 3), GetTurnosController);
+router.get(
+  "/turno/medico",
+  verifyToken,
+  verifyRole(2, 3),
+  GetTurnosMedicoController
+);
 router.get(
   "/turno/today",
   verifyToken,

@@ -35,7 +35,8 @@ export function useFetchCallback<T = unknown>() {
         if (!response.ok) {
           throw new Error(json.mensaje);
         }
-        setData(json);
+        // setData(json);
+        setData(json as T);
       } catch (error) {
         setError(error);
       } finally {

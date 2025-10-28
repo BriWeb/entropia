@@ -105,6 +105,7 @@ export default function LoginPage() {
 
       // se guarda el token en el localStorage
       localStorage.setItem("myToken", token);
+      localStorage.setItem("usuario", JSON.stringify(usuario));
 
       // se guarda el usuario en el contexto global
       setUsuario(usuario);
@@ -162,7 +163,6 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)} // Esto guarda la contraseña
-                placeholder="••••••••"
                 className="w-full"
                 required
               />
@@ -189,7 +189,7 @@ export default function LoginPage() {
               </a>
             </div>
             {/* Esto es el botón para enviar el formulario */}
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full cursor-pointer">
               Iniciar sesión
             </Button>
 

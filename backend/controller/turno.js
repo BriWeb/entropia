@@ -74,11 +74,80 @@ const applyFilters = (filters, pool) => {
     condiciones.push("legajo = @legajo");
     request.input("legajo", sql.VarChar, legajo);
   }
-
   return { condiciones, request };
 };
 
 export const GetTurnosController = async (req, res) => {
+  try {
+    const pool = await conectar();
+
+    let { limit, offset } = req.query;
+    limit = parseInt(limit);
+    offset = parseInt(offset);
+
+    if (isNaN(limit)) limit = 20;
+    if (isNaN(offset)) offset = 0;
+
+    // ----------------
+    // PARA EL COUNT
+    let filters = req.query;
+    filters.fecha = req.fechaToday ? req.fechaToday : filters.fecha;
+    let { condiciones, request } = applyFilters(filters, pool);
+    let consulta = "SELECT * FROM GetTurnos";
+    // Si hay condiciones se unen con "AND" y se agregan a la consulta
+    if (condiciones.length > 0) {
+      consulta += " WHERE " + condiciones.join(" AND ");
+    }
+    const consultaCount = `SELECT COUNT(*) AS total FROM (${consulta}) AS conteo`;
+    let totalCount = await request.query(consultaCount); //count
+    // ----------------
+
+    // ----------------
+    // PARA LA PAGINACIÓN
+    /* 
+    El anterior request (del count) queda cerrado y no puede reutilizarse, por lo que
+    creamos uno nuevo y volvemos a agregar los inputs
+    */
+    const { request: dataRequest } = applyFilters(filters, pool);
+
+    dataRequest.input("limit", sql.Int, limit);
+    dataRequest.input("offset", sql.Int, offset);
+
+    consulta +=
+      " ORDER BY id desc OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY";
+
+    let resultado = await dataRequest.query(consulta);
+    // ----------------
+    // console.log(resultado);
+    const count = totalCount.recordset[0].total;
+    const rows = resultado.recordset;
+    let respuesta = { count, rows };
+
+    if (respuesta.rows.length === 0) {
+      return res.status(404).json({ mensaje: "No se encontraron turnos." });
+    }
+
+    respuesta.rows = respuesta.rows.map((registro) => ({
+      ...registro, // Esto copiaría todas las propiedades.
+      horario: dayjs.utc(registro.horario).format("HH:mm"),
+      fecha: dayjs.utc(registro.fecha).format("DD/MM/YYYY"),
+    }));
+
+    return res.status(200).send(respuesta);
+  } catch (error) {
+    console.error("Error al conectar o ejecutar:", error);
+
+    const mensaje = evaluateError(error);
+
+    res.status(500).json({
+      mensaje,
+      error: error.message,
+    });
+  }
+};
+
+// obtener turnos de un médico
+export const GetTurnosMedicoController = async (req, res) => {
   try {
     const pool = await conectar();
 

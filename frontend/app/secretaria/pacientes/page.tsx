@@ -1,63 +1,70 @@
+"use client";
+
 import {
   Search,
   Filter,
-  UserPlus,
+  // UserPlus,
+  Plus,
   FileText,
   Phone,
   Mail,
   UserCircle,
 } from "lucide-react";
 import AuthGuard from "@/components/auth/AuthGuard";
+import ModalNuevoPaciente from "@/components/ui/ModalNuevoPaciente";
+import { useState, useEffect } from "react";
+import { useFetchCallback } from "@/hooks/useFetchCallback";
+import { useFetch } from "@/hooks/useFetch";
+import { Paciente } from "@/types/paciente";
+import Loading from "@/components/ui/loading";
+import Error from "@/components/ui/error";
+import PaginationButton from "@/components/ui/paginationButton";
 
 export default function PacientesPage() {
   // Datos de ejemplo para pacientes
-  const pacientes = [
-    {
-      id: 1,
-      nombre: "Juan Pérez",
-      documento: "12345678",
-      telefono: "555-1234",
-      email: "juan.perez@ejemplo.com",
-      fechaNacimiento: "15/03/1985",
-      ultimaVisita: "10/05/2023",
-    },
-    {
-      id: 2,
-      nombre: "María García",
-      documento: "23456789",
-      telefono: "555-2345",
-      email: "maria.garcia@ejemplo.com",
-      fechaNacimiento: "22/07/1990",
-      ultimaVisita: "05/05/2023",
-    },
-    {
-      id: 3,
-      nombre: "Carlos López",
-      documento: "34567890",
-      telefono: "555-3456",
-      email: "carlos.lopez@ejemplo.com",
-      fechaNacimiento: "10/11/1978",
-      ultimaVisita: "01/05/2023",
-    },
-    {
-      id: 4,
-      nombre: "Ana Martínez",
-      documento: "45678901",
-      telefono: "555-4567",
-      email: "ana.martinez@ejemplo.com",
-      fechaNacimiento: "05/09/1995",
-      ultimaVisita: "28/04/2023",
-    },
-    {
-      id: 5,
-      nombre: "Pedro Ramírez",
-      documento: "56789012",
-      telefono: "555-5678",
-      email: "pedro.ramirez@ejemplo.com",
-      fechaNacimiento: "18/12/1982",
-      ultimaVisita: "25/04/2023",
-    },
-  ];
+
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const { loading, data, error, fetchNow } = useFetchCallback();
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [offset, setOffset] = useState(0);
+
+  const limit = 5;
+
+  interface PacienteResponse {
+    count: number;
+    rows: Paciente[];
+  }
+
+  const {
+    loading: loadingPaciente,
+    data: dataPaciente,
+    error: errorPaciente,
+  } = useFetch<PacienteResponse>({
+    url: `${process.env.NEXT_PUBLIC_API_URL}/paciente/all?limit=${limit}&offset=${offset}`,
+    requiredAuth: true, // indica que debe incluir a el usuario actual en los encabezados para autorizar
+  });
+
+  const errorMessage = error
+    ? error instanceof Error
+      ? (error as Error).message
+      : String(error)
+    : null;
+
+  useEffect(() => {
+    if (dataPaciente) {
+      console.log("Pacientes obtenidos: ", dataPaciente);
+      setTotalPages(Math.ceil(dataPaciente.count / limit));
+      setCurrentPage(Math.floor(offset / limit) + 1);
+    }
+  }, [dataPaciente, offset]);
+
+  useEffect(() => {
+    // Si guardó el paciente, cerramos el modal
+    if (data) {
+      setModalAbierto(false);
+    }
+  }, [data]);
 
   // Datos de ejemplo para documentos
   const documentos = [
@@ -119,6 +126,29 @@ export default function PacientesPage() {
     },
   ];
 
+  const handleGuardarPaciente = (nuevoPaciente: {
+    nombre: string;
+    apellido: string;
+    documento: string;
+    obra_social: boolean;
+  }) => {
+    const token = localStorage.getItem("myToken");
+    fetchNow({
+      url: `${process.env.NEXT_PUBLIC_API_URL}/paciente/add`,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: {
+        nombre: nuevoPaciente.nombre,
+        apellido: nuevoPaciente.apellido,
+        documento: nuevoPaciente.documento,
+        obra_social: nuevoPaciente.obra_social,
+      },
+    });
+  };
+
   return (
     <AuthGuard>
       <div className="h-full mx-auto bg-secondary px-4 sm:px-6 lg:px-8 py-6">
@@ -138,66 +168,173 @@ export default function PacientesPage() {
               </div>
               <input
                 type="text"
-                placeholder="Buscar por nombre, documento o email..."
+                placeholder="Buscar por documento..."
                 className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
               />
             </div>
             <div className="flex gap-2">
-              <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-secondary text-primary-700 hover:bg-gray-50">
+              <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-secondary text-primary-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800 cursor-pointer">
                 <Filter className="h-4 w-4" />
                 <span>Filtrar</span>
               </button>
-              <button className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-md text-white hover:bg-gray-700">
+              {/* <button className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-md text-white hover:bg-gray-700">
                 <UserPlus className="h-4 w-4" />
                 <span>Nuevo paciente</span>
+                </button> */}
+              <button
+                onClick={() => setModalAbierto(true)}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-md text-white hover:bg-gray-700 cursor-pointer"
+              >
+                <Plus className="h-4 w-4" />
+                <span>Nuevo paciente</span>
               </button>
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center justify-between">
+            <div className="mb-4 sm:mb-0">
+              <span className="text-sm text-gray-500">
+                Mostrando{" "}
+                {dataPaciente && dataPaciente.count ? dataPaciente.count : 0}{" "}
+                pacientes
+              </span>
             </div>
           </div>
         </div>
 
         {/* Lista de pacientes y documentos */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Lista de pacientes */}
           <div className="lg:col-span-1 bg-card rounded-lg shadow-md overflow-hidden">
             <div className="px-4 py-3 bg-card border-b border-gray-200">
               <h2 className="text-lg font-medium text-primary">Pacientes</h2>
             </div>
-            <div className="divide-y divide-gray-200 max-h-[600px] overflow-auto">
-              {pacientes.map((paciente) => (
-                <div
-                  key={paciente.id}
-                  className="p-4 hover:bg-accent cursor-pointer"
-                >
-                  <div className="flex items-center space-x-4">
-                    <div className="flex-shrink-0">
-                      <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                        <UserCircle className="h-6 w-6 text-gray-600" />
+            {dataPaciente && dataPaciente.count && (
+              <>
+                <div className="divide-y divide-gray-200 max-h-[600px] overflow-auto">
+                  {dataPaciente.rows.map((paciente) => (
+                    <div
+                      key={paciente.paciente_id}
+                      className="p-4 hover:bg-accent cursor-pointer"
+                    >
+                      <div className="flex items-center space-x-4">
+                        <div className="flex-shrink-0">
+                          <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                            <UserCircle className="h-6 w-6 text-gray-600" />
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">
+                            {paciente.nombre} {paciente.apellido}
+                          </p>
+                          <p className="text-sm truncate">
+                            DNI: {paciente.documento}
+                          </p>
+                        </div>
+                        <div className="flex-shrink-0 flex space-x-2">
+                          <button className="p-1 rounded-full text-gray-400 hover:text-primary">
+                            <Phone className="h-4 w-4" />
+                          </button>
+                          <button className="p-1 rounded-full text-gray-400 hover:text-primary">
+                            <Mail className="h-4 w-4" />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">
-                        {paciente.nombre}
-                      </p>
-                      <p className="text-sm truncate">
-                        DNI: {paciente.documento}
-                      </p>
-                    </div>
-                    <div className="flex-shrink-0 flex space-x-2">
-                      <button className="p-1 rounded-full text-gray-400 hover:text-primary">
-                        <Phone className="h-4 w-4" />
-                      </button>
-                      <button className="p-1 rounded-full text-gray-400 hover:text-primary">
-                        <Mail className="h-4 w-4" />
-                      </button>
+                  ))}
+                </div>
+                {/* Paginación */}
+                <div className="bg-secondary border-t border-gray-200 px-4 py-3 sm:px-6 mt-4 rounded-lg shadow-md">
+                  <div className="flex items-center justify-between">
+                    <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                      <div>
+                        <p className="text-sm text-primary-700">
+                          Mostrando{" "}
+                          <span className="font-medium">{offset + 1}</span> a{" "}
+                          <span className="font-medium">
+                            {Math.min(offset + limit, dataPaciente.count)}
+                          </span>{" "}
+                          de{" "}
+                          <span className="font-medium">
+                            {dataPaciente.count}
+                          </span>{" "}
+                          resultados
+                        </p>
+                      </div>
+                      <div>
+                        <nav
+                          className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                          aria-label="Pagination"
+                        >
+                          <button
+                            onClick={() =>
+                              setOffset((prev) => Math.max(prev - limit, 0))
+                            }
+                            disabled={offset === 0}
+                            className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-secondary text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <span className="sr-only">Anterior</span>
+                            <svg
+                              className="h-5 w-5"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                              aria-hidden="true"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </button>
+                          {Array.from({ length: totalPages }).map((_, i) => {
+                            const page = i + 1;
+                            return (
+                              <PaginationButton
+                                key={page}
+                                pageNumber={page}
+                                isActive={page === currentPage}
+                                onClick={() => setOffset((page - 1) * limit)}
+                              />
+                            );
+                          })}
+                          <button
+                            onClick={() =>
+                              setOffset((prev) =>
+                                Math.min(prev + limit, (totalPages - 1) * limit)
+                              )
+                            }
+                            disabled={offset + limit >= dataPaciente.count}
+                            className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-secondary text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <span className="sr-only">Siguiente</span>
+                            <svg
+                              className="h-5 w-5"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                              aria-hidden="true"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </button>
+                        </nav>
+                      </div>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
+              </>
+            )}
+            {loadingPaciente && <Loading />}
+            {errorPaciente && <Error error={errorPaciente} />}
           </div>
 
           {/* Información del paciente y documentos */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-1 space-y-6">
             {/* Información del paciente */}
             <div className="bg-secondary rounded-lg shadow-md p-6">
               <div className="flex items-start justify-between">
@@ -208,9 +345,7 @@ export default function PacientesPage() {
                     </div>
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold">
-                      Juan Pérez
-                    </h2>
+                    <h2 className="text-xl font-bold">Juan Pérez</h2>
                     <p className="text-sm">DNI: 12345678</p>
                   </div>
                 </div>
@@ -292,9 +427,7 @@ export default function PacientesPage() {
             {/* Documentos del paciente */}
             <div className="bg-secondary rounded-lg shadow-md overflow-hidden">
               <div className="px-4 py-3 bg-card border-b border-gray-200 flex justify-between items-center">
-                <h2 className="text-lg font-medium">
-                  Documentos
-                </h2>
+                <h2 className="text-lg font-medium">Documentos</h2>
                 <button className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-800 rounded-md text-sm hover:bg-gray-200">
                   <FileText className="h-4 w-4" />
                   <span>Nuevo documento</span>
@@ -371,6 +504,13 @@ export default function PacientesPage() {
           </div>
         </div>
       </div>
+      <ModalNuevoPaciente
+        isOpen={modalAbierto}
+        onClose={() => setModalAbierto(false)}
+        onSave={handleGuardarPaciente}
+        loading={loading}
+        error={errorMessage}
+      />
     </AuthGuard>
   );
 }

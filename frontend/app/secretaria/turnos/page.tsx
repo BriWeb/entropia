@@ -8,6 +8,8 @@ import Error from "@/components/ui/error";
 import PaginationButton from "@/components/ui/paginationButton";
 import { useEffect, useState } from "react";
 import AuthGuard from "@/components/auth/AuthGuard";
+import ModalNuevoTurno from "@/components/ui/ModalNuevoTurno";
+import { useFetchCallback } from "@/hooks/useFetchCallback";
 
 export default function TurnosPage() {
   const [offset, setOffset] = useState(0);
@@ -15,29 +17,43 @@ export default function TurnosPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 20;
 
-  interface TurnoResponse {
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const { loading, data, error, fetchNow } = useFetchCallback();
+
+  const errorMessage = error
+    ? error instanceof Error
+      ? (error as Error).message
+      : String(error)
+    : null;
+
+  interface AllTurnoResponse {
     count: number;
     rows: Turno[];
   }
 
-  const { loading, data, error } = useFetch<TurnoResponse>({
+  const {
+    loading: loadingTurno,
+    data: dataTurno,
+    error: errorTurno,
+  } = useFetch<AllTurnoResponse>({
     url: `${process.env.NEXT_PUBLIC_API_URL}/turno?limit=${limit}&offset=${offset}`,
     requiredAuth: true, // indica que debe incluir a el usuario actual en los encabezados para autorizar
   });
 
   useEffect(() => {
-    if (data) {
-      console.log("Turnos obtenidos: ", data);
-      setTotalPages(Math.ceil(data.count / limit));
+    if (dataTurno) {
+      // console.log("Turnos obtenidos: ", dataTurno);
+      setTotalPages(Math.ceil(dataTurno.count / limit));
       setCurrentPage(Math.floor(offset / limit) + 1);
     }
-  }, [data, offset]);
+  }, [dataTurno, offset]);
 
   useEffect(() => {
-    if (offset) {
-      console.log("El offset está en: ", offset);
+    // Si guardó el turno, cerramos el modal
+    if (data) {
+      setModalAbierto(false);
     }
-  }, [offset]);
+  }, [data]);
 
   // Función para obtener color según estado
   const getEstadoColor = (estado: string) => {
@@ -51,6 +67,31 @@ export default function TurnosPage() {
       default:
         return "bg-gray-100 text-gray-800";
     }
+  };
+
+  const handleGuardarTurno = (nuevoTurno: {
+    fecha: string | null;
+    horario_id: string | null;
+    paciente_id: string | null;
+    medico_id: string | null;
+    recepcion_id: string | null;
+  }) => {
+    const token = localStorage.getItem("myToken");
+    fetchNow({
+      url: `${process.env.NEXT_PUBLIC_API_URL}/turno/add`,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: {
+        fecha: nuevoTurno.fecha,
+        horario_id: nuevoTurno.horario_id,
+        paciente_id: nuevoTurno.paciente_id,
+        medico_id: nuevoTurno.medico_id,
+        recepcion_id: nuevoTurno.recepcion_id,
+      },
+    });
   };
 
   return (
@@ -77,11 +118,12 @@ export default function TurnosPage() {
               />
             </div>
             <div className="flex gap-2">
-              <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-secondary text-primary-700 hover:bg-gray-50">
+              <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-secondary text-primary-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800 cursor-pointer">
                 <Filter className="h-4 w-4" />
                 <span>Filtrar</span>
               </button>
-              <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-secondary text-primary-700 hover:bg-gray-50">
+
+              <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-secondary text-primary-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800 cursor-pointer">
                 <Calendar className="h-4 w-4" />
                 <span>Fecha</span>
               </button>
@@ -90,11 +132,19 @@ export default function TurnosPage() {
           <div className="flex flex-col sm:flex-row items-center justify-between">
             <div className="mb-4 sm:mb-0">
               <span className="text-sm text-gray-500">
-                Mostrando {data && data.count ? data.count : 0} turnos
+                Mostrando {dataTurno && dataTurno.count ? dataTurno.count : 0}{" "}
+                turnos
               </span>
             </div>
             <div className="flex gap-2">
-              <button className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-md text-white hover:bg-gray-700">
+              {/* <button className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-md text-white hover:bg-gray-700 cursor-pointer">
+                <Plus className="h-4 w-4" />
+                <span>Nuevo turno</span>
+              </button> */}
+              <button
+                onClick={() => setModalAbierto(true)}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-md text-white hover:bg-gray-700 cursor-pointer"
+              >
                 <Plus className="h-4 w-4" />
                 <span>Nuevo turno</span>
               </button>
@@ -103,7 +153,7 @@ export default function TurnosPage() {
         </div>
 
         {/* Tabla de turnos */}
-        {data && data.count && (
+        {dataTurno && dataTurno.count && (
           <>
             <div className="bg-secondary rounded-lg shadow-md overflow-hidden">
               <div className="overflow-x-auto">
@@ -155,7 +205,7 @@ export default function TurnosPage() {
                     </tr>
                   </thead>
                   <tbody className="bg-card divide-y divide-gray-200">
-                    {data.rows.map((turno) => (
+                    {dataTurno.rows.map((turno) => (
                       <tr key={turno.id} className="hover:bg-accent">
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                           {turno.fecha}
@@ -205,9 +255,9 @@ export default function TurnosPage() {
                       Mostrando{" "}
                       <span className="font-medium">{offset + 1}</span> a{" "}
                       <span className="font-medium">
-                        {Math.min(offset + limit, data.count)}
+                        {Math.min(offset + limit, dataTurno.count)}
                       </span>{" "}
-                      de <span className="font-medium">{data.count}</span>{" "}
+                      de <span className="font-medium">{dataTurno.count}</span>{" "}
                       resultados
                     </p>
                   </div>
@@ -255,7 +305,7 @@ export default function TurnosPage() {
                             Math.min(prev + limit, (totalPages - 1) * limit)
                           )
                         }
-                        disabled={offset + limit >= data.count}
+                        disabled={offset + limit >= dataTurno.count}
                         className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-secondary text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <span className="sr-only">Siguiente</span>
@@ -280,9 +330,17 @@ export default function TurnosPage() {
             </div>
           </>
         )}
-        {loading && <Loading />}
-        {error && <Error error={error} />}
+        {loadingTurno && <Loading />}
+        {errorTurno && <Error error={errorTurno} />}
       </div>
+      <ModalNuevoTurno
+        isOpen={modalAbierto}
+        onClose={() => setModalAbierto(false)}
+        onSave={handleGuardarTurno}
+        loading={loading}
+        error={errorMessage}
+        // turnoSeleccionado={}
+      />
     </AuthGuard>
   );
 }

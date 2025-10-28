@@ -1,7 +1,6 @@
 "use client";
 
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { UserCircle } from "lucide-react";
 import AuthGuard from "@/components/auth/AuthGuard";
@@ -11,18 +10,57 @@ import { useAuth } from "@/app/context/AuthContext";
 import { useEffect, useState } from "react";
 import Loading from "@/components/ui/loading";
 import Error from "@/components/ui/error";
+import ModalNuevoTurno from "@/components/ui/ModalNuevoTurno";
+import { useFetchCallback } from "@/hooks/useFetchCallback";
+import { TurnoSeleccionado } from "@/types/turnoseleccionado";
+import { Especialidad } from "@/types/especialidad";
+import { Horario } from "@/types/horario";
 
 export default function DashboardSecretaria() {
   // extraemos el usuario
   const { usuario } = useAuth();
   const [horarioId, setHorarioId] = useState<number | null>(null);
   const [especialidadId, setEspecialidadId] = useState<number | null>(null);
+  const { loading, data, error, fetchNow } = useFetchCallback();
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const [turnoSeleccionado, setTurnoSeleccionado] =
+    useState<TurnoSeleccionado | null>(null);
+
+  const errorMessage = error
+    ? error instanceof Error
+      ? (error as Error).message
+      : String(error)
+    : null;
+
+  useEffect(() => {
+    // Si guardó el turno, cerramos el modal
+    if (data) {
+      setModalAbierto(false);
+    }
+  }, [data]);
+
+  const handleTurnoClick = (turno: any) => {
+    console.log(turno);
+    const datos: TurnoSeleccionado = {
+      fecha: turno.fecha,
+      horario: turno.horario,
+      horario_id: turno.horario_id,
+      medico: turno.nombre + " " + turno.apellido,
+      medico_id: turno.medico_id,
+    };
+    setTurnoSeleccionado(datos); // 1. Guarda los datos
+    setModalAbierto(true); // 2. Abre el modal
+  };
 
   interface Turno {
+    medico_id: number;
+    especialidad_id: number;
     especialidad: string;
     nombre: string;
     apellido: string;
     horario: string;
+    horario_id: number;
+    fecha: Date;
   }
 
   interface HorariosPorProfesional {
@@ -46,11 +84,6 @@ export default function DashboardSecretaria() {
     requiredAuth: true,
   });
 
-  interface Especialidad {
-    id: number;
-    descripcion: string;
-  }
-
   const {
     loading: loadingEspecialidades,
     data: dataEspecialidades,
@@ -60,25 +93,39 @@ export default function DashboardSecretaria() {
     requiredAuth: true,
   });
 
-  interface Horarios {
-    id: number;
-    horario: string;
-  }
-
   const {
     loading: loadingHorarios,
     data: dataHorarios,
     error: errorHorarios,
-  } = useFetch<Horarios[]>({
+  } = useFetch<Horario[]>({
     url: `${process.env.NEXT_PUBLIC_API_URL}/turno/horarios`,
     requiredAuth: true,
   });
 
-  useEffect(() => {
-    if (dataHorarios) {
-      console.log("Horarios obtenidos: ", dataHorarios);
-    }
-  }, [dataHorarios]);
+  const handleGuardarTurno = (nuevoTurno: {
+    fecha: string | null;
+    horario_id: string | null;
+    paciente_id: string | null;
+    medico_id: string | null;
+    recepcion_id: string | null;
+  }) => {
+    const token = localStorage.getItem("myToken");
+    fetchNow({
+      url: `${process.env.NEXT_PUBLIC_API_URL}/turno/add`,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: {
+        fecha: nuevoTurno.fecha,
+        horario_id: nuevoTurno.horario_id,
+        paciente_id: nuevoTurno.paciente_id,
+        medico_id: nuevoTurno.medico_id,
+        recepcion_id: nuevoTurno.recepcion_id,
+      },
+    });
+  };
 
   return (
     <AuthGuard>
@@ -128,28 +175,6 @@ export default function DashboardSecretaria() {
                 </CardTitle>
               </CardHeader>
             </Card>
-          </div>
-
-          <div className="bg-card p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-bold">Buscar Paciente</h3>
-            <div>
-              <div className="flex flex-col gap-4 mb-4">
-                <label htmlFor="nombre">Documento de Identidad</label>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Input
-                    type="text"
-                    id="nombre"
-                    placeholder="Ingrese el documento de identidad"
-                  />
-                  <Button className="sm:w-auto w-full">Buscar</Button>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-between items-center border border-gray-300 rounded-md p-4">
-              <p>No se ha seleccionado o encontrado ningún paciente </p>
-              <Button>Registrar nuevo paciente</Button>
-            </div>
           </div>
 
           <div className="space-y-6">
@@ -217,6 +242,9 @@ export default function DashboardSecretaria() {
               {dataToday &&
                 Object.entries(dataToday).map(([id, turnos]) => {
                   const medico = turnos[0];
+                  // {
+                  //   console.log(medico);
+                  // }
                   return (
                     <div
                       key={id}
@@ -238,15 +266,21 @@ export default function DashboardSecretaria() {
                       <div className="space-y-4 flex-grow mt-4">
                         <h4 className="font-medium">Horarios disponibles</h4>
                         <div className="grid grid-cols-2 gap-2 overflow-y-auto pr-2">
-                          {turnos.map((turno, index) => (
-                            <Button
-                              key={`${id}-${index}`}
-                              variant="outline"
-                              className="bg-secondary hover:bg-gray-100"
-                            >
-                              {turno.horario}
-                            </Button>
-                          ))}
+                          {turnos.map((turno, index) => {
+                            // {
+                            //   console.log(turno);
+                            // }
+                            return (
+                              <Button
+                                onClick={() => handleTurnoClick(turno)}
+                                key={`${id}-${index}`}
+                                variant="outline"
+                                className="bg-secondary hover:bg-gray-100 cursor-pointer"
+                              >
+                                {turno.horario}
+                              </Button>
+                            );
+                          })}
                         </div>
                       </div>
                     </div>
@@ -256,6 +290,16 @@ export default function DashboardSecretaria() {
           </div>
         </div>
       </>
+      {modalAbierto && (
+        <ModalNuevoTurno
+          isOpen={modalAbierto}
+          onClose={() => setModalAbierto(false)}
+          onSave={handleGuardarTurno}
+          loading={loading}
+          error={errorMessage}
+          turnoSeleccionado={turnoSeleccionado}
+        />
+      )}
     </AuthGuard>
   );
 }

@@ -24,11 +24,11 @@ const dbConfig = {
     idleTimeoutMillis: 30000,
   },
   options: {
-    encrypt: true, // true en Azure, false en local
-    trustServerCertificate: false, // true en local, false en Azure
-    cryptoCredentialsDetails: {
-      ca: fs.readFileSync(certPath),
-    },
+    encrypt: true, // true en nube, false en local
+    trustServerCertificate: false, // true en local, false en nube
+    // cryptoCredentialsDetails: {
+    //   ca: fs.readFileSync(certPath), //en AWS
+    // },
   },
 };
 
