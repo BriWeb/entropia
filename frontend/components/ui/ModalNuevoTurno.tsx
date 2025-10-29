@@ -19,20 +19,21 @@ import { useFetch } from "@/hooks/useFetch";
 import { Horario } from "@/types/horario";
 import { Medico } from "@/types/medico";
 import { useFetchCallback } from "@/hooks/useFetchCallback";
+import MiniLoading from "./mini-loading";
 
 interface ModalNuevoTurnoProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (turno: {
     fecha: string | null;
-    horario: string | null;
+    horario_id: string | null;
     paciente_id: string | null;
     medico_id: string | null;
     recepcion_id: string | null;
   }) => void;
   loading: boolean;
   error: string | null;
-  turnoSeleccionado: TurnoSeleccionado | null;
+  turnoSeleccionado?: TurnoSeleccionado | null;
 }
 
 export default function ModalNuevoTurno({
@@ -44,7 +45,7 @@ export default function ModalNuevoTurno({
   turnoSeleccionado,
 }: ModalNuevoTurnoProps) {
   const [fecha, setFecha] = useState("");
-  const [horario, setHorario] = useState("");
+  // const [horario, setHorario] = useState("");
   const [horarioId, setHorarioId] = useState("");
   const [pacienteDocumento, setPacienteDocumento] = useState("");
   const [pacienteId, setPacienteId] = useState("");
@@ -89,13 +90,13 @@ export default function ModalNuevoTurno({
           Authorization: `Bearer ${token}`,
         },
       });
-    }, 2000);
+    }, 1000);
 
     // limpiar el timeout si se sigue escribiendo
     return () => clearTimeout(timeout);
   }, [pacienteDocumento, fetchNow]);
 
-  const { data: dataHorario } = useFetch<Horario[]>({
+  const { data: dataHorario, loading: loadingHorario } = useFetch<Horario[]>({
     url: `${process.env.NEXT_PUBLIC_API_URL}/turno/horarios`,
     requiredAuth: true,
   });
@@ -114,7 +115,6 @@ export default function ModalNuevoTurno({
 
   useEffect(() => {
     if (isOpen && dataIdRecepcion) {
-      // console.log("RecepcionId seteado");
       setRecepcionId(dataIdRecepcion.id.toString());
     }
   }, [isOpen, dataIdRecepcion]);
@@ -130,16 +130,18 @@ export default function ModalNuevoTurno({
     rows: Medico[];
   }
 
-  const { data: dataMedico } = useFetch<MedicoResponse>({
-    url: `${process.env.NEXT_PUBLIC_API_URL}/medico?all=true`,
-    requiredAuth: true,
-  });
+  const { data: dataMedico, loading: loadingMedico } = useFetch<MedicoResponse>(
+    {
+      url: `${process.env.NEXT_PUBLIC_API_URL}/medico?all=true`,
+      requiredAuth: true,
+    }
+  );
 
   useEffect(() => {
     if (isOpen && turnoSeleccionado && dataHorario && dataMedico) {
       console.log("El turno es: ", turnoSeleccionado);
       setFecha(turnoSeleccionado.fecha.split("T")[0]);
-      setHorario(turnoSeleccionado.horario.toString());
+      // setHorario(turnoSeleccionado.horario.toString());
       setHorarioId(turnoSeleccionado.horario_id.toString());
       setMedicoId(turnoSeleccionado.medico_id.toString());
       setCanChoice(false);
@@ -155,7 +157,7 @@ export default function ModalNuevoTurno({
       medico_id: medicoId,
       recepcion_id: recepcionId,
     });
-    onClose();
+    // onClose();
   };
 
   if (!isOpen) return null;
@@ -194,8 +196,9 @@ export default function ModalNuevoTurno({
               onValueChange={setHorarioId}
               disabled={!dataHorario || !canChoice}
             >
-              <SelectTrigger id="horario" className="w-full">
+              <SelectTrigger id="horario" className="w-full relative z-10">
                 <SelectValue placeholder="Seleccionar horario" />
+                {loadingHorario && <MiniLoading absolute={true} />}
               </SelectTrigger>
               <SelectContent>
                 {dataHorario?.map((h) => (
@@ -214,18 +217,22 @@ export default function ModalNuevoTurno({
               type="text"
               placeholder="Documento del paciente"
               value={pacienteDocumento}
-              onChange={(e) => setPacienteDocumento(e.target.value)}
+              onChange={(e) => {
+                const valorNumerico = e.target.value.replace(/\D/g, "");
+                setPacienteDocumento(valorNumerico);
+              }}
+              maxLength={9}
               required
             />
           </div>
 
           <div>
             {errorMessage && <Error error={errorMessage} />}
-            {loadingPaciente && <Loading />}
+            {loadingPaciente && <MiniLoading />}
             {dataPaciente && (
               <Select value={pacienteId} onValueChange={setPacienteId}>
                 <SelectTrigger id="paciente_id" className="w-full">
-                  <SelectValue placeholder="Coincidencias" />
+                  <SelectValue placeholder="Personas encontradas" />
                 </SelectTrigger>
                 <SelectContent>
                   {dataPaciente.rows.map((p) => {
@@ -251,8 +258,9 @@ export default function ModalNuevoTurno({
               onValueChange={setMedicoId}
               disabled={!dataMedico || !canChoice}
             >
-              <SelectTrigger id="medico" className="w-full">
+              <SelectTrigger id="medico" className="w-full relative z-10">
                 <SelectValue placeholder="Seleccionar médico" />
+                {loadingMedico && <MiniLoading absolute={true} />}
               </SelectTrigger>
               <SelectContent>
                 {dataMedico?.rows.map((m) => {

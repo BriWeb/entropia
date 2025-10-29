@@ -35,7 +35,7 @@ export default function DashboardSecretaria() {
   useEffect(() => {
     // Si guardó el turno, cerramos el modal
     if (data) {
-      setModalAbierto(false);
+      // setModalAbierto(false);
     }
   }, [data]);
 

@@ -97,7 +97,7 @@ export default function ModalNuevoPaciente({
                 const valorNumerico = e.target.value.replace(/\D/g, "");
                 setDocumento(valorNumerico);
               }}
-              maxLength={20}
+              maxLength={9}
               required
             />
           </div>

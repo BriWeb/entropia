@@ -333,14 +333,15 @@ export default function TurnosPage() {
         {loadingTurno && <Loading />}
         {errorTurno && <Error error={errorTurno} />}
       </div>
-      <ModalNuevoTurno
-        isOpen={modalAbierto}
-        onClose={() => setModalAbierto(false)}
-        onSave={handleGuardarTurno}
-        loading={loading}
-        error={errorMessage}
-        // turnoSeleccionado={}
-      />
+      {modalAbierto && (
+        <ModalNuevoTurno
+          isOpen={modalAbierto}
+          onClose={() => setModalAbierto(false)}
+          onSave={handleGuardarTurno}
+          loading={loading}
+          error={errorMessage}
+        />
+      )}
     </AuthGuard>
   );
 }

@@ -35,16 +35,6 @@ app.use(personaRoutes);
 app.use(turnoRoutes);
 app.use(recepcionistaRoutes);
 
-// Cargando pruebas si existen
-if (fs.existsSync("./pruebas")) {
-  try {
-    const pruebasRoutes = await import("./pruebas/routes/pruebas.js");
-    app.use(pruebasRoutes.default);
-  } catch (error) {
-    console.error("Error al cargar las rutas de pruebas:", error);
-  }
-}
-
 // Middleware para manejar errores 404
 app.use((req, res, next) => {
   res.status(404).json({ mensaje: "Ruta no encontrada" });
