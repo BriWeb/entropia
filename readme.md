@@ -67,11 +67,9 @@ npm install
 
 ```env
 DB_SERVER_NUBE=servidor-de-bases-sqlserver.database.windows.net
-DB_SERVER_LOCAL=localhost
 DB_PORT=1433
 DB_NAME=entropia
 DB_USER=
-DB_PASSWORD_LOCAL=
 DB_PASSWORD_NUBE=
 NODE_PORT=3001
 JWT_SECRET_KEY=ENTROPIA

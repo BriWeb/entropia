@@ -11,7 +11,8 @@ import recepcionistaRoutes from "./routes/recepcionista.js";
 config();
 const app = express();
 
-let port = process.env.NODE_PORT;
+let port = parseInt(process.env.NODE_PORT, 10) || 3001;
+
 // let host = "127.0.0.1";
 let host = "0.0.0.0";
 
@@ -23,7 +24,6 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.options("*", cors());
 
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
@@ -43,5 +43,5 @@ app.use((req, res, next) => {
 
 // Servidor
 app.listen(port, host, () => {
-  console.log(`Servidor corriendo en "http://${host}:${port}'`);
+  console.log(`Servidor corriendo en "http://${host}:${port}"`);
 });

@@ -27,7 +27,10 @@ const dbConfig = {
     encrypt: true, // true en nube, false en local
     trustServerCertificate: false, // true en local, false en nube
     cryptoCredentialsDetails: {
-      ca: fs.readFileSync(certPath), //en AWS
+      ca:
+        process.env.WITH_CERT === "true"
+          ? fs.readFileSync(certPath) //en AWS
+          : undefined,
     },
   },
 };
