@@ -7,6 +7,7 @@ import medicoRoutes from "./routes/medico.js";
 import personaRoutes from "./routes/persona.js";
 import turnoRoutes from "./routes/turno.js";
 import recepcionistaRoutes from "./routes/recepcionista.js";
+import solicitudRoutes from "./routes/solicitud.js"
 
 config();
 const app = express();
@@ -35,6 +36,7 @@ app.use(medicoRoutes);
 app.use(personaRoutes);
 app.use(turnoRoutes);
 app.use(recepcionistaRoutes);
+app.use(solicitudRoutes);
 
 // Middleware para manejar errores 404
 app.use((req, res, next) => {

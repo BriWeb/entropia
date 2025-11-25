@@ -2,6 +2,8 @@ if not exists (select * from sys.databases where name = 'entropia')
 begin
 	create database entropia
 end;
+go
+
 use entropia;
 go
 
@@ -161,6 +163,22 @@ begin
 		references persona.medico (id),
 		constraint fk_turnorecepcion_id foreign key (recepcion_id)
 		references persona.recepcion (id)
+	);
+end;
+go
+
+--drop table turno.solicitud;
+if not exists (select * from sys.tables where name = 'solicitud' and schema_id = schema_id('turno'))
+begin
+	create table turno.solicitud(
+		id int identity(1,1),
+		nombre varchar(25) not null,
+		apellido varchar(25) not null,
+		documento varchar(25) not null,
+		email varchar(25),
+    especialidad_id int not null,
+		constraint fk_solicitudpecialidad_id foreign key (especialidad_id)
+		references persona.especialidad(id),
 	);
 end;
 go
@@ -632,6 +650,23 @@ create or alter view GetTurnos as --✔️
 go
 --select * from GetTurnos;
 
+--drop view GetSolicitudes
+create or alter view GetSolicitudes as --✔️
+	select 
+	  so.id,
+		so.nombre as "nombre_solicitud",
+		so.apellido as "apellido_solicitud",
+		so.documento as "documento_solicitud",
+		so.email as "email_solicitud",
+		esp.descripcion as "especialidad",
+		esp.id as "especialista_en_id"
+	from turno.solicitud as so
+  join persona.especialidad as esp
+  on so.especialidad_id = esp.id
+
+go
+--select * from GetSolicitudes;
+
 --drop procedure AvailableTurnos
 create or alter procedure AvailableTurnos
 @Especialista int,
@@ -865,11 +900,22 @@ VALUES
 (10, '2025-10-30', 6, 2, 4), (11, '2025-10-30', 7, 3, 1), (12, '2025-10-30', 8, 1, 2), 
 (13, '2025-10-31', 9, 5, 3), (14, '2025-10-31', 10, 6, 4), (15, '2025-10-31', 11, 7, 1), 
 (16, '2025-10-31', 12, 8, 2), (17, '2025-10-31', 13, 1, 3), (18, '2025-10-31', 14, 4, 4), 
-(1, '2025-11-01', 15, 2, 1), (2, '2025-11-01', 16, 3, 2), (3, '2025-11-01', 17, 7, 3), 
-(4, '2025-11-01', 18, 5, 4), (5, '2025-11-02', 19, 6, 1), (6, '2025-11-02', 20, 7, 2), 
-(7, '2025-11-02', 21, 8, 3), (8, '2025-11-02', 22, 1, 4), (9, '2025-11-02', 1, 8, 1), 
-(10, '2025-11-03', 2, 2, 2), (11, '2025-11-03', 3, 3, 3);
+(1, '2025-11-01', 15, 2, 1), (2, '2025-12-01', 16, 3, 2), (3, '2025-12-01', 17, 7, 3), 
+(4, '2025-12-01', 18, 5, 4), (5, '2025-12-02', 19, 6, 1), (6, '2025-12-02', 20, 7, 2), 
+(7, '2025-12-02', 21, 8, 3), (8, '2025-12-02', 22, 1, 4), (9, '2025-12-02', 1, 8, 1), 
+(10, '2025-12-03', 2, 2, 2), (11, '2025-12-03', 3, 3, 3);
 
+-- Ejemplo solicitudes de turnos
+INSERT INTO turno.solicitud (nombre, apellido, documento, email, especialidad_id) 
+VALUES 
+('María', 'López', '40322111', 'maria.lopez@mail.com', 1),   -- General
+('Jorge', 'Pereyra', '38911223', 'jorge.p@mail.com', 2),      -- Pediatría
+('Luciana', 'Ramírez', '37222334', 'lucy.ramirez@mail.com', 3), -- Ginecología
+('Carlos', 'Gómez', '35111888', 'carlos.gomez@mail.com', 4), -- Dentista
+('Ana', 'Martínez', '42888777', 'ana.martinez@mail.com', 5), -- Dermatología
+('Roberto', 'Sosa', '33122999', 'rob.sosa@mail.com', 6),     -- Cardiología
+('Florencia', 'Vega', '40987654', 'flor.vega@mail.com', 7),  -- Psiquiatría
+('Diego', 'Fernández', '39444222', 'dfernandez@mail.com', 8), -- Traumatología
 
 --VISTA PARA VER TODOS LOS TURNOS
 --select * from GetTurnos
