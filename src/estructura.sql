@@ -603,6 +603,26 @@ begin
 end;
 go
 
+--drop procedure AddSolicitud
+create or alter procedure AddSolicitud --✔️
+	@Nombre NVARCHAR(25),
+	@Apellido NVARCHAR(25),
+	@Documento NVARCHAR(25),
+	@Email NVARCHAR(25),
+	@Especialidad_id int,
+	@Id INT OUTPUT
+as
+begin
+	declare @Id_table table (id int);
+
+	insert into turno.solicitud (nombre, apellido, documento, email, especialidad_id)
+	output inserted.id into @Id_table(id)
+	values (@Nombre, @Apellido, @Documento, @Email, @Especialidad_id);
+
+	SELECT @Id = id FROM @Id_table;
+end;
+go
+
 --DECLARE @TurnoId INT;
 --EXEC AddTurno 17, '2025-06-27', 11, 6, 1, @TurnoId OUTPUT;
 --SELECT @TurnoId AS Id;

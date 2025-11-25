@@ -125,19 +125,19 @@ export const GetSolicitudesController = async (req, res) => {
 
 export const AddSolicitudController = async (req, res) => {
   try {
-    const { horario_id, fecha, paciente_id, medico_id, recepcion_id } =
+    const { nombre, apellido, documento, email, especialidad_id } =
       req.body; //Estos van en el JSON del Postman. REINICIAR NODE SERVER ANTES
     const pool = await conectar();
 
     let resultado = await pool
       .request()
-      .input("Horario_id", sql.Int, horario_id)
-      .input("Fecha", sql.Date, fecha)
-      .input("Paciente_id", sql.Int, paciente_id)
-      .input("Medico_id", sql.Int, medico_id)
-      .input("Recepcion_id", sql.Int, recepcion_id)
+      .input("Nombre", sql.NVarChar, nombre)
+      .input("Apellido", sql.NVarChar, apellido)
+      .input("Documento", sql.NVarChar, documento)
+      .input("Email", sql.NVarChar, email)
+      .input("Especialidad_id", sql.Int, especialidad_id)
       .output("Id", sql.Int)
-      .execute("AddTurno");
+      .execute("AddSolicitud");
     console.log(resultado);
     return res.status(201).send(resultado.output.Id);
   } catch (error) {
