@@ -25,7 +25,7 @@ const dbConfig = {
   },
   options: {
     encrypt: true, // true en nube, false en local
-    trustServerCertificate: false, // true en local, false en nube
+    trustServerCertificate: true, // true en local, false en nube
     cryptoCredentialsDetails: {
       ca:
         process.env.WITH_CERT === "true"
